@@ -4,9 +4,333 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>修改个人信息</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+        .bg-emotion {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-emotion .circle1 {
+            position: absolute;
+            width: 320px; height: 320px;
+            left: -100px; top: -100px;
+            background: radial-gradient(circle, #a8edea 0%, #fed6e3 100%);
+            opacity: 0.5;
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+        .bg-emotion .circle2 {
+            position: absolute;
+            width: 220px; height: 220px;
+            right: -60px; bottom: 40px;
+            background: radial-gradient(circle, #fcb69f 0%, #ffecd2 100%);
+            opacity: 0.4;
+            border-radius: 50%;
+            filter: blur(12px);
+        }
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.10), 0 1.5px 8px rgba(252,182,159,0.08);
+            padding: 2.5rem 2rem 2rem 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .profile-title {
+            font-size: 2rem;
+            color: #5f5d9c;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .profile-desc {
+            color: #a0a0b2;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+        .col-1 { grid-column: span 12; }
+        .col-2 { grid-column: span 6; }
+        .col-3 { grid-column: span 4; }
+        .col-4 { grid-column: span 3; }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #a8edea;
+            box-shadow: 0 0 0 3px rgba(168, 237, 234, 0.13);
+        }
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        .cta-btn {
+            background: #fff;
+            color: #764ba2;
+            border: 2px solid #764ba2;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
+        }
+        .cta-btn:hover {
+            background: #764ba2;
+            color: #fff;
+        }
+        .cta-btn.danger {
+            border-color: #f44336;
+            color: #f44336;
+        }
+        .cta-btn.danger:hover {
+            background: #f44336;
+            color: #fff;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1.5rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.18);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        @media (max-width: 700px) {
+            .profile-container {
+                padding: 1rem;
+            }
+            .form-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .col-1, .col-2, .col-3, .col-4 { grid-column: span 1 !important; }
+        }
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+            .profile-container {
+                padding: 0.5rem;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .profile-title {
+                font-size: 1.2rem;
+            }
+            .submit-btn {
+                font-size: 1rem;
+                padding: 0.7rem 1rem;
+            }
+        }
+        /* 头像上传样式 */
+        .avatar-upload-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .avatar-preview {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border: 2.5px solid #e1e1e1;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .avatar-upload-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            margin-bottom: 0.5rem;
+        }
+        .avatar-upload-label:hover {
+            background: #764ba2;
+        }
+        .avatar-upload-input {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>修改个人信息</h1>
-    <!-- 这里可以添加修改个人信息的表单和相关元素 -->
+<div class="bg-emotion">
+    <div class="circle1"></div>
+    <div class="circle2"></div>
+</div>
+<div class="profile-container">
+    <div class="profile-header">
+        <h1 class="profile-title">修改个人信息</h1>
+        <div class="profile-desc">完善你的个人资料，让大家更好地认识你</div>
+    </div>
+    <form id="profileForm">
+        <div class="avatar-upload-section">
+            <div class="avatar-preview" id="avatarPreviewBox">
+                <img id="avatarPreviewImg" src="https://www.gravatar.com/avatar?d=mp&s=120" alt="头像预览">
+            </div>
+            <label class="avatar-upload-label">
+                更换头像
+                <input type="file" class="avatar-upload-input" id="avatarInput" accept="image/*">
+            </label>
+        </div>
+        <div class="form-section">
+            <div class="form-group col-4">
+                <label for="nickname">昵称</label>
+                <input type="text" id="nickname" name="nickname" required placeholder="请输入昵称">
+            </div>
+            <div class="form-group col-4">
+                <label for="gender">性别</label>
+                <select id="gender" name="gender" class="form-control">
+                    <option value="">请选择</option>
+                    <option value="male">男</option>
+                    <option value="female">女</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            <div class="form-group col-4">
+                <label for="birthday">生日</label>
+                <input type="date" id="birthday" name="birthday">
+            </div>
+            <div class="form-group col-4">
+                <label for="location">所在地</label>
+                <input type="text" id="location" name="location" placeholder="请输入所在地">
+            </div>
+            <div class="form-group col-1">
+                <label for="bio">个人简介</label>
+                <textarea id="bio" name="bio" placeholder="介绍一下自己吧..."></textarea>
+            </div>
+            <div class="form-group col-2">
+                <label for="email">邮箱</label>
+                <input type="email" id="email" name="email" placeholder="请输入邮箱">
+            </div>
+            <div class="form-group col-2">
+                <label for="phone">手机号</label>
+                <input type="tel" id="phone" name="phone" placeholder="请输入手机号">
+            </div>
+        </div>
+        <button type="submit" class="submit-btn">保存修改</button>
+        <div class="cta-group">
+            <button type="reset" class="cta-btn">重置</button>
+            <button type="button" class="cta-btn" onclick="window.location.href='/'">返回主页</button>
+            <button type="button" class="cta-btn danger" onclick="logoutAccount()">注销账号</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 表单提交处理
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 收集表单数据
+        const formData = new FormData(this);
+
+        // 这里添加表单提交逻辑
+        console.log('表单数据：', Object.fromEntries(formData));
+        // TODO: 发送数据到服务器
+    });
+
+    // 注销账号示例函数
+    function logoutAccount() {
+        if(confirm('确定要注销账号吗？此操作不可恢复！')){
+            // TODO: 调用注销接口
+            alert('已注销（示例）');
+        }
+    }
+
+    // 头像上传与预览
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                document.getElementById('avatarPreviewImg').src = evt.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 </body>
 </html> 

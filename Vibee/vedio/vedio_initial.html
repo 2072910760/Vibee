@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibee 用户首页</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #f6f8fb;
+            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
+            color: #222;
+        }
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.06);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 2rem;
+            color: #667eea;
+            letter-spacing: 2px;
+            margin-right: 2rem;
+            user-select: none;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+            margin-right: auto;
+        }
+        .user-avatar {
+            margin-left: 1.5rem;
+            position: relative;
+            justify-self: end;
+        }
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: border 0.2s;
+        }
+        .avatar-img:hover {
+            border-color: #667eea;
+        }
+        .user-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 52px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.13);
+            border-radius: 10px;
+            min-width: 140px;
+            z-index: 100;
+            padding: 0.5rem 0;
+        }
+        .user-avatar:hover .user-menu,
+        .user-avatar:focus-within .user-menu {
+            display: block;
+        }
+        .user-menu-item {
+            padding: 0.7rem 1.2rem;
+            color: #333;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        .user-menu-item:hover {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        .nav-bar {
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem 2rem 0.5rem 2rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .nav-item {
+            background: #f3f6fd;
+            color: #667eea;
+            border-radius: 20px;
+            padding: 0.5rem 1.2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border: none;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: #667eea;
+            color: #fff;
+        }
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 6px 24px rgba(102,126,234,0.13);
+        }
+        .card-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #eaeaea;
+        }
+        .card-body {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .card-meta {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        @media (max-width: 700px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                align-items: stretch;
+            }
+            .search-box {
+                max-width: 100%;
+                margin-right: 0;
+            }
+        }
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 0.5rem 0.5rem;
+                align-items: stretch;
+            }
+            .logo {
+                margin-bottom: 0.5rem;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+            .user-avatar {
+                margin-left: 0;
+                margin-top: 0.5rem;
+                align-self: flex-end;
+                justify-self: end;
+            }
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.7rem 1.3rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 24px;
+            font-size: 1.08rem;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            background: #f7f9fc;
+            color: #333;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1.5px 6px rgba(102,126,234,0.04);
+        }
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px #a8edea44;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Vibee</div>
+        <div class="search-box">
+            <input type="text" placeholder="搜索你感兴趣的内容...">
+        </div>
+        <div class="user-avatar" tabindex="0">
+            <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
+            <div class="user-menu">
+                <div class="user-menu-item" onclick="window.location.href='login.html'">请先登录</div>
+                <div class="user-menu-item" onclick="window.location.href='register.html'">注册</div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-bar">
+        <button class="nav-item active">推荐</button>
+        <button class="nav-item">热门</button>
+        <button class="nav-item">影视</button>
+        <button class="nav-item">音乐</button>
+        <button class="nav-item">科技</button>
+        <button class="nav-item">游戏</button>
+        <button class="nav-item">生活</button>
+        <button class="nav-item">时尚</button>
+        <button class="nav-item">知识</button>
+        <button class="nav-item">更多</button>
+    </div>
+    <div class="main-content">
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="内容图片">
+            <div class="card-body">
+                <div class="card-title">Vibee首页示例内容</div>
+                <div class="card-meta">1.2万浏览 · 2024-06-13</div>
+            </div>
+        </div>
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="内容图片">
+            <div class="card-body">
+                <div class="card-title">这里可以放视频、文章、动态等</div>
+                <div class="card-meta">8,888浏览 · 2024-06-12</div>
+            </div>
+        </div>
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="内容图片">
+            <div class="card-body">
+                <div class="card-title">支持响应式布局，移动端也美观</div>
+                <div class="card-meta">5,432浏览 · 2024-06-10</div>
+            </div>
+        </div>
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80" alt="内容图片">
+            <div class="card-body">
+                <div class="card-title">你可以自定义内容卡片</div>
+                <div class="card-meta">2,345浏览 · 2024-06-09</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function logoutUser() {
+            if(confirm('确定要退出登录吗？')){
+                // TODO: 实际退出登录逻辑
+                alert('已退出登录（示例）');
+            }
+        }
+    </script>
+</body>
+</html>
