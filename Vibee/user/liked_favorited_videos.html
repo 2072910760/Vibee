@@ -3,10 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>点赞收藏的视频</title>
+    <title>我点赞/收藏的视频</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/vibee-font.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #fff;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 0.5rem 2rem;
+            z-index: 100;
+        }
+        .navbar-brand {
+            font-family: 'VibeeFont', sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(
+                45deg,
+                #FF6B6B,
+                #4ECDC4,
+                #FFD93D,
+                #FF6B6B
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 8s ease infinite, float 6s ease-in-out infinite, glow 3s ease-in-out infinite;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        .nav-link {
+            color: #333 !important;
+            font-size: 17px;
+            margin-right: 18px;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .nav-link.active {
+            color: #00a1d6 !important;
+        }
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 6px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .avatar-dropdown {
+            cursor: pointer;
+        }
+        .avatar-img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .search-bar-nav {
+            border-radius: 18px;
+            border: 1px solid #eee;
+            padding-left: 36px;
+            font-size: 15px;
+            width: 200px;
+            background: #fafbfc;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #bbb;
+        }
+        .search-nav-wrap {
+            position: relative;
+            margin-left: 18px;
+        }
+        .main-content {
+            padding: 40px 40px 0 40px;
+        }
+        .video-section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+        .video-card {
+            background: #fafbfc;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            padding: 0;
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+            position: relative;
+        }
+        .video-card:hover {
+            box-shadow: 0 4px 16px rgba(0,161,214,0.10);
+        }
+        .video-thumb-wrap {
+            position: relative;
+        }
+        .video-thumb {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #eee;
+            display: block;
+        }
+        .video-info-bar {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 8px 2px 8px;
+        }
+        .video-info-bar span {
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+        }
+        .video-info-bar svg {
+            width: 15px;
+            height: 15px;
+            margin-right: 2px;
+        }
+        .video-body {
+            padding: 12px 12px 8px 12px;
+        }
+        .video-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 4px;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .video-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .video-author {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 2px;
+        }
+        .video-actions {
+            display: flex;
+            align-items: center;
+        }
+        .video-actions .btn {
+            border-radius: 16px;
+            font-size: 13px;
+            margin-right: 8px;
+            padding: 2px 10px;
+        }
+        .icon-like {
+            color: #ff6b81;
+            margin-right: 2px;
+        }
+        .icon-fav {
+            color: #ffc107;
+            margin-right: 2px;
+        }
+        @media (max-width: 1200px) {
+            .main-content { padding: 20px 5px 0 5px; }
+        }
+    </style>
 </head>
 <body>
-    <h1>点赞收藏的视频</h1>
-    <!-- 这里可以添加点赞和收藏的视频列表 -->
+<!-- 顶部导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <a class="navbar-brand" href="#">
+        <span class="vibee-logo">
+            Vi
+            <span class="bee-body">
+                bee
+                <div class="bee-wings">
+                    <div class="bee-wing left"></div>
+                    <div class="bee-wing right"></div>
+                </div>
+                <div class="bee-antenna"></div>
+                <div class="bee-stripes">
+                    <div class="bee-stripe"></div>
+                    <div class="bee-stripe"></div>
+                    <div class="bee-stripe"></div>
+                </div>
+            </span>
+        </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 4l9 6.5" stroke="#19b300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10.5V19a1 1 0 001 1h3.5a1 1 0 001-1v-3.5a1 1 0 011-1h1a1 1 0 011 1V19a1 1 0 001 1H18a1 1 0 001-1v-8.5" stroke="#19b300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>首页
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#ff7cae" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#ff7cae" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>动态
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#00a1d6" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="#00a1d6" stroke-width="2"/></svg>
+                    </span>投稿
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="7" width="16" height="10" rx="2" stroke="#3ec6ff" stroke-width="2"/><rect x="7" y="4" width="10" height="16" rx="2" stroke="#3ec6ff" stroke-width="2"/></svg>
+                    </span>合集
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="#ffc107" stroke-width="2" fill="none"/></svg>
+                    </span>收藏
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 13.5 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.5 16 21 16 21H12Z" stroke="#ff6b81" stroke-width="2" fill="none"/></svg>
+                    </span>追番追剧
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#00a1d6" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 008.6 15a1.65 1.65 0 00-1.82-.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0015 8.6a1.65 1.65 0 001.82.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 15z" stroke="#00a1d6" stroke-width="2"/></svg>
+                    </span>设置
+                </a>
+            </li>
+        </ul>
+        <div class="search-nav-wrap d-none d-lg-block">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#bbb" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#bbb" stroke-width="2" stroke-linecap="round"/></svg>
+            <input type="text" class="form-control search-bar-nav" placeholder="搜索视频、动态">
+        </div>
+        <div class="dropdown ms-3 avatar-dropdown">
+            <img src="https://via.placeholder.com/38" class="avatar-img dropdown-toggle" id="avatarDropdown" data-bs-toggle="dropdown" aria-expanded="false" alt="用户头像">
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="avatarDropdown">
+                <li><a class="dropdown-item" href="edit_profile.html">个人中心</a></li>
+                <li><a class="dropdown-item" href="../visitor/password_login.html">退出登录</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="main-content">
+    <div class="video-section-title mb-3">最近点赞的视频 <span style="font-size:14px;color:#aaa;font-weight:400;">仅自己可见</span></div>
+    <div class="row">
+        <!-- 视频卡片示例1 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=页面置换算法" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>6.0万</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>131</span>
+                        <span>11:21</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">页面置换算法</div>
+                    <div class="video-desc">页面置换算法：先进先出置换算法，最佳置换算法...</div>
+                    <div class="video-author">UP 波尔奔奔</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例2 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=数据库复习" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>2.1万</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>54</span>
+                        <span>10:19</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">数据库复习</div>
+                    <div class="video-desc">数据库系统概论复习，三小时速成不挂科！...</div>
+                    <div class="video-author">UP 没睡醒冬</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例3 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=极限流跑刀" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>67.1万</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>692</span>
+                        <span>02:10:19</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">极限流跑刀保姆级教学</div>
+                    <div class="video-desc">新版航天基地机密极限流跑刀全降落点保姆级教学全降落点...</div>
+                    <div class="video-author">UP 六月的雪s</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例4 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=零号大坝" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>110.2万</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>929</span>
+                        <span>01:11:01</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">零号大坝极限流跑刀</div>
+                    <div class="video-desc">新版零号大坝极限流跑刀保姆级教学全降落点...</div>
+                    <div class="video-author">UP 六月的雪s</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例5 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=五条悟配音" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>1444</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>3</span>
+                        <span>06:27</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">五条悟配音</div>
+                    <div class="video-desc">【配音】悟！悟？悟！----我又来配音五条悟了</div>
+                    <div class="video-author">UP 优无忧</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例6 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=五条悟剪辑" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>206</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>16</span>
+                        <span>03:56</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">五条悟剪辑</div>
+                    <div class="video-desc">因为尝试了很多次发不出去 所以出此下策的五条悟配音</div>
+                    <div class="video-author">UP 优无忧</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例7 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=AnubisB技木1" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>116</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>6</span>
+                        <span>08:47</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">Anubis提速B技木1</div>
+                    <div class="video-desc">Anubis提速B点技巧演示，适合新手玩家</div>
+                    <div class="video-author">UP Re_ZH</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例8 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=时间刺客" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>1654.0万</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>1.0万</span>
+                        <span>02:07</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">"时间刺客"</div>
+                    <div class="video-desc">我的世界爆笑沙雕短片，大家都认为是个玩笑，直到...</div>
+                    <div class="video-author">UP 星雨Starrrain</div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频卡片示例9 -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="video-card">
+                <div class="video-thumb-wrap">
+                    <img src="https://via.placeholder.com/400x225?text=鬼灭之刃翻唱" class="video-thumb" alt="视频封面">
+                    <div class="video-info-bar">
+                        <span><svg viewBox="0 0 24 24"><path d="M3 19V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>2723</span>
+                        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#fff"/></svg>2</span>
+                        <span>01:29</span>
+                    </div>
+                </div>
+                <div class="video-body">
+                    <div class="video-title">鬼灭之刃翻唱</div>
+                    <div class="video-desc">【男声翻唱】大华丽了！！鬼灭之刃游郭篇op-残響散歌翻唱</div>
+                    <div class="video-author">UP 优无忧</div>
+                </div>
+            </div>
+        </div>
+        <!-- 更多视频卡片可继续添加 -->
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

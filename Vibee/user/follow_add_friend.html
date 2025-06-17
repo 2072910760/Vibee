@@ -4,9 +4,399 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关注/添加好友</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入手写体和无衬线字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/vibee-font.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #fff;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 0.5rem 2rem;
+            z-index: 100;
+        }
+        .navbar-brand {
+            font-family: 'VibeeFont', sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(
+                45deg,
+                #FF6B6B,
+                #4ECDC4,
+                #FFD93D,
+                #FF6B6B
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 8s ease infinite, float 6s ease-in-out infinite, glow 3s ease-in-out infinite;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        .nav-link {
+            color: #333 !important;
+            font-size: 17px;
+            margin-right: 18px;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .nav-link.active {
+            color: #00a1d6 !important;
+        }
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 6px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .avatar-dropdown {
+            cursor: pointer;
+        }
+        .avatar-img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .search-bar-nav {
+            border-radius: 18px;
+            border: 1px solid #eee;
+            padding-left: 36px;
+            font-size: 15px;
+            width: 200px;
+            background: #fafbfc;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #bbb;
+        }
+        .search-nav-wrap {
+            position: relative;
+            margin-left: 18px;
+        }
+        .sidebar {
+            min-width: 220px;
+            max-width: 240px;
+            border-right: 1px solid #eee;
+            padding: 30px 0 0 0;
+            height: 100vh;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .sidebar .list-group-item.active {
+            background: #e3f1fa;
+            color: #00a1d6;
+            border: none;
+            font-weight: bold;
+        }
+        .sidebar .list-group-item {
+            border: none;
+            font-size: 16px;
+            padding: 12px 24px;
+        }
+        .main-content {
+            padding: 40px 40px 0 40px;
+        }
+        .tab-btns .btn {
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 15px;
+            padding: 5px 22px;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .user-card {
+            background: #fafbfc;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 18px;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-family: 'Poppins', sans-serif;
+            color: #00a1d6;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 18px;
+        }
+        .user-desc {
+            color: #888;
+            font-size: 14px;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .user-btns .btn {
+            border-radius: 18px;
+            font-size: 14px;
+            background: #f1f2f3;
+            color: #888;
+            border: none;
+            margin-left: 8px;
+            font-family: 'Roboto', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .user-btns .btn.active {
+            background: #e3f1fa;
+            color: #00a1d6;
+        }
+        .search-bar {
+            max-width: 220px;
+        }
+        .batch-btn {
+            margin-left: 16px;
+            border-radius: 18px;
+            font-size: 14px;
+        }
+        @media (max-width: 900px) {
+            .main-content { padding: 20px 5px 0 5px; }
+            .sidebar { min-width: 120px; max-width: 140px; }
+        }
+    </style>
 </head>
 <body>
-    <h1>关注/添加好友</h1>
-    <!-- 这里可以添加关注/添加好友的界面和相关元素 -->
+<!-- 顶部导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <a class="navbar-brand" href="#">
+        <span class="vibee-logo">
+            Vi
+            <span class="bee-body">
+                bee
+                <div class="bee-wings">
+                    <div class="bee-wing left"></div>
+                    <div class="bee-wing right"></div>
+                </div>
+                <div class="bee-antenna"></div>
+                <div class="bee-stripes">
+                    <div class="bee-stripe"></div>
+                    <div class="bee-stripe"></div>
+                    <div class="bee-stripe"></div>
+                </div>
+            </span>
+        </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <span class="nav-icon">
+                        <!-- 首页icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 4l9 6.5" stroke="#19b300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10.5V19a1 1 0 001 1h3.5a1 1 0 001-1v-3.5a1 1 0 011-1h1a1 1 0 011 1V19a1 1 0 001 1H18a1 1 0 001-1v-8.5" stroke="#19b300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>首页
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <!-- 动态icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#ff7cae" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#ff7cae" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>动态
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <!-- 投稿icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#00a1d6" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="#00a1d6" stroke-width="2"/></svg>
+                    </span>投稿
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <!-- 合集icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="7" width="16" height="10" rx="2" stroke="#3ec6ff" stroke-width="2"/><rect x="7" y="4" width="10" height="16" rx="2" stroke="#3ec6ff" stroke-width="2"/></svg>
+                    </span>合集
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <!-- 收藏icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="#ffc107" stroke-width="2" fill="none"/></svg>
+                    </span>收藏
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <!-- 追番icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 13.5 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.5 16 21 16 21H12Z" stroke="#ff6b81" stroke-width="2" fill="none"/></svg>
+                    </span>追番追剧
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <span class="nav-icon">
+                        <!-- 设置icon -->
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#00a1d6" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 008.6 15a1.65 1.65 0 00-1.82-.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0015 8.6a1.65 1.65 0 001.82.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 15z" stroke="#00a1d6" stroke-width="2"/></svg>
+                    </span>设置
+                </a>
+            </li>
+        </ul>
+        <div class="search-nav-wrap d-none d-lg-block">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#bbb" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#bbb" stroke-width="2" stroke-linecap="round"/></svg>
+            <input type="text" class="form-control search-bar-nav" placeholder="搜索视频、动态">
+        </div>
+        <div class="dropdown ms-3 avatar-dropdown">
+            <img src="https://via.placeholder.com/38" class="avatar-img dropdown-toggle" id="avatarDropdown" data-bs-toggle="dropdown" aria-expanded="false" alt="用户头像">
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="avatarDropdown">
+                <li><a class="dropdown-item" href="edit_profile.html">个人中心</a></li>
+                <li><a class="dropdown-item" href="../visitor/password_login.html">退出登录</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="d-flex">
+    <!-- 左侧栏 -->
+    <div class="sidebar">
+        <div class="list-group list-group-flush">
+            <a href="#" class="list-group-item list-group-item-action active">我的关注</a>
+            <a href="#" class="list-group-item list-group-item-action">我的粉丝</a>
+            <a href="#" class="list-group-item list-group-item-action">特别关注</a>
+            <a href="#" class="list-group-item list-group-item-action">互相关注</a>
+            <a href="#" class="list-group-item list-group-item-action">悄悄关注</a>
+            <a href="#" class="list-group-item list-group-item-action">黑名单</a>
+        </div>
+    </div>
+    <!-- 右侧主内容区域 -->
+    <div class="main-content flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="tab-btns">
+                <button class="btn btn-light active">全部</button>
+                <button class="btn btn-light">分组1</button>
+                <button class="btn btn-light">分组2</button>
+            </div>
+            <div class="d-flex">
+                <input type="text" class="form-control search-bar me-2" placeholder="搜索用户">
+                <button class="btn btn-outline-secondary batch-btn">批量操作</button>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <!-- 用户卡片示例 -->
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">AthenaMoko</div>
+                        <div class="user-desc">我是帅哥</div>
+                    </div>
+                    <button class="btn btn-light user-btns active">已关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户B</div>
+                        <div class="user-desc">这是用户B的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns">关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户C</div>
+                        <div class="user-desc">这是用户C的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns active">已关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户D</div>
+                        <div class="user-desc">这是用户D的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns">关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户E</div>
+                        <div class="user-desc">这是用户E的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns active">已关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户F</div>
+                        <div class="user-desc">这是用户F的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns">关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户G</div>
+                        <div class="user-desc">这是用户G的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns active">已关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户H</div>
+                        <div class="user-desc">这是用户H的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns">关注</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="user-card">
+                    <img src="https://via.placeholder.com/56" alt="用户头像" class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">用户I</div>
+                        <div class="user-desc">这是用户I的简介</div>
+                    </div>
+                    <button class="btn btn-light user-btns active">已关注</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 
