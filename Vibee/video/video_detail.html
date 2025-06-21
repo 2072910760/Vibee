@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频详情 - Vibee</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <style>
+        body {
+            margin: 0;
+            background: #f6f8fb;
+            color: #222;
+        }
+        
+        /* 统一头部样式 */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.06);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+            margin-right: auto;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.7rem 1.3rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 24px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            background: #f7f9fc;
+        }
+        
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        
+        .user-avatar {
+            margin-left: 1.5rem;
+            position: relative;
+            justify-self: end;
+        }
+        
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: border 0.2s;
+        }
+        
+        .avatar-img:hover {
+            border-color: #667eea;
+        }
+        
+        .user-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 52px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.13);
+            border-radius: 10px;
+            min-width: 140px;
+            z-index: 100;
+            padding: 0.5rem 0;
+        }
+        
+        .user-avatar:hover .user-menu,
+        .user-avatar:focus-within .user-menu {
+            display: block;
+        }
+        
+        .user-menu-item {
+            padding: 0.7rem 1.2rem;
+            color: #333;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        
+        .user-menu-item:hover {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        
+        /* 统一布局容器 */
+        .layout-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e1e1e1;
+            padding: 2rem 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #555;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        
+        .sidebar-nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f6f8fb;
+        }
+        
+        /* 视频播放区域 */
+        .video-player-section {
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .play-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        /* 视频信息 */
+        .video-info-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e1e1e1;
+        }
+        
+        .video-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .video-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            background: #f3f6fd;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .action-btn.liked {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        /* 频道信息 */
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .channel-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .channel-details {
+            flex: 1;
+        }
+        
+        .channel-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+        
+        .channel-stats {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .subscribe-btn {
+            padding: 0.6rem 1.5rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .subscribe-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .subscribe-btn.subscribed {
+            background: #666;
+        }
+        
+        /* 视频描述 */
+        .video-description {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .description-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .description-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        /* 评论区域 */
+        .comments-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comments-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .comments-count {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .comment-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid #e1e1e1;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .comment-input:focus {
+            border-color: #667eea;
+        }
+        
+        .comment-btn {
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            font-weight: 500;
+            align-self: flex-end;
+        }
+        
+        .comment-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        /* 评论列表 */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .comment-item {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .comment-content {
+            flex: 1;
+        }
+        
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-author {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .comment-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .comment-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .comment-action {
+            font-size: 0.8rem;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .comment-action:hover {
+            color: #667eea;
+        }
+        
+        /* 相关视频 */
+        .related-videos {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            padding: 2rem;
+        }
+        
+        .related-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        
+        .related-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .related-item {
+            display: flex;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .related-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .related-thumbnail {
+            width: 120px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .related-details {
+            flex: 1;
+        }
+        
+        .related-video-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+        
+        .related-channel {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.2rem;
+        }
+        
+        .related-stats {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .video-player {
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid #e1e1e1;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .video-player {
+                height: 300px;
+            }
+            
+            .video-meta {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .video-actions {
+                justify-content: center;
+            }
+            
+            .comment-form {
+                flex-direction: column;
+            }
+            
+            .comment-btn {
+                align-self: stretch;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+            }
+            
+            .search-box {
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .user-avatar {
+                margin-left: 0;
+            }
+            
+            .video-player {
+                height: 250px;
+            }
+            
+            .video-title {
+                font-size: 1.2rem;
+            }
+            
+            .channel-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .related-item {
+                flex-direction: column;
+            }
+            
+            .related-thumbnail {
+                width: 100%;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="logo">
+        Vibee
+        <span class="bee bee-1">🐝</span>
+        <span class="bee bee-2">🐝</span>
+        <span class="bee bee-3">🐝</span>
+    </div>
+    <div class="search-box">
+        <input type="text" placeholder="搜索视频、频道或用户...">
+    </div>
+    <div class="user-avatar" tabindex="0">
+        <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
+        <div class="user-menu">
+            <div class="user-menu-item" onclick="window.location.href='../visitor/login.html'">登录</div>
+            <div class="user-menu-item" onclick="window.location.href='../visitor/email_register.html'">注册</div>
+        </div>
+    </div>
+</div>
+<div class="layout-container">
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">主要功能</h3>
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="video_initial.html" class="sidebar-nav-link">
+                        <i class="bi bi-house"></i>
+                        首页推荐
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="video_keyword_search.html" class="sidebar-nav-link">
+                        <i class="bi bi-search"></i>
+                        关键词搜索
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="video_data_metrics.html" class="sidebar-nav-link">
+                        <i class="bi bi-graph-up"></i>
+                        数据统计
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">用户中心</h3>
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="../user/edit_profile.html" class="sidebar-nav-link">
+                        <i class="bi bi-person"></i>
+                        编辑个人资料
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="../user/video_upload.html" class="sidebar-nav-link">
+                        <i class="bi bi-cloud-upload"></i>
+                        视频上传
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="../user/watch_history.html" class="sidebar-nav-link">
+                        <i class="bi bi-clock-history"></i>
+                        观看历史
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="../user/liked_favorited_videos.html" class="sidebar-nav-link">
+                        <i class="bi bi-heart"></i>
+                        收藏视频
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="../user/friend_list.html" class="sidebar-nav-link">
+                        <i class="bi bi-people"></i>
+                        好友管理
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content">
+        <!-- 视频播放区域 -->
+        <div class="video-player-section">
+            <div class="video-player">
+                <div class="play-button">
+                    <i class="bi bi-play-fill" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 视频信息 -->
+        <div class="video-info-section">
+            <h1 class="video-title">2024年最值得一看的旅行风景视频合集</h1>
+            
+            <div class="video-meta">
+                <div class="video-stats">
+                    <span class="stat-item">
+                        <i class="bi bi-eye"></i>
+                        1,234,567 次观看
+                    </span>
+                    <span class="stat-item">
+                        <i class="bi bi-calendar"></i>
+                        2024年1月15日
+                    </span>
+                    <span class="stat-item">
+                        <i class="bi bi-clock"></i>
+                        12:34
+                    </span>
+                </div>
+                
+                <div class="video-actions">
+                    <button class="action-btn liked">
+                        <i class="bi bi-hand-thumbs-up-fill"></i>
+                        12.5K
+                    </button>
+                    <button class="action-btn">
+                        <i class="bi bi-hand-thumbs-down"></i>
+                        不喜欢
+                    </button>
+                    <button class="action-btn">
+                        <i class="bi bi-share"></i>
+                        分享
+                    </button>
+                    <button class="action-btn">
+                        <i class="bi bi-download"></i>
+                        下载
+                    </button>
+                    <button class="action-btn">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="channel-info">
+                <img src="https://www.gravatar.com/avatar?d=mp&s=120" alt="频道头像" class="channel-avatar">
+                <div class="channel-details">
+                    <div class="channel-name">旅行频道</div>
+                    <div class="channel-stats">1.2M 订阅者 • 234 个视频</div>
+                </div>
+                <button class="subscribe-btn subscribed">已订阅</button>
+            </div>
+            
+            <div class="video-description">
+                <div class="description-text">
+                    探索世界各地的美丽风景，从壮丽的山脉到宁静的海滩，这个视频合集将带您领略大自然的鬼斧神工。包含详细的旅行攻略和拍摄技巧分享，适合所有热爱旅行和摄影的朋友。
+                    <br><br>
+                    视频包含以下内容：
+                    • 世界十大最美海滩
+                    • 壮丽的山脉风光
+                    • 神秘的森林探索
+                    • 城市建筑之美
+                    • 野生动物摄影
+                    <br><br>
+                    如果您喜欢这个视频，请点赞、分享和订阅我们的频道，获取更多精彩的旅行内容！
+                </div>
+                <div class="description-meta">
+                    <span>#旅行 #风景 #摄影 #vlog #探索</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 评论区域 -->
+        <div class="comments-section">
+            <div class="comments-header">
+                <h3 class="comments-title">评论</h3>
+                <span class="comments-count">1,234 条评论</span>
+            </div>
+            
+            <div class="comment-form">
+                <img src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像" class="comment-avatar">
+                <textarea class="comment-input" placeholder="添加评论..."></textarea>
+                <button class="comment-btn">发表评论</button>
+            </div>
+            
+            <div class="comments-list">
+                <div class="comment-item">
+                    <img src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">旅行爱好者</span>
+                            <span class="comment-time">2天前</span>
+                        </div>
+                        <div class="comment-text">
+                            太美了！这些风景照片让我有了旅行的冲动。请问第一个海滩是在哪里拍摄的？我想去那里看看。
+                        </div>
+                        <div class="comment-actions">
+                            <span class="comment-action">👍 45</span>
+                            <span class="comment-action">回复</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comment-item">
+                    <img src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">摄影达人</span>
+                            <span class="comment-time">3天前</span>
+                        </div>
+                        <div class="comment-text">
+                            拍摄技巧很棒！请问您使用的是什么相机和镜头？光线处理得非常好。
+                        </div>
+                        <div class="comment-actions">
+                            <span class="comment-action">👍 23</span>
+                            <span class="comment-action">回复</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comment-item">
+                    <img src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">背包客</span>
+                            <span class="comment-time">1周前</span>
+                        </div>
+                        <div class="comment-text">
+                            我已经去过视频中的几个地方了，确实很美！推荐大家一定要亲自去看看，照片无法完全展现那种震撼感。
+                        </div>
+                        <div class="comment-actions">
+                            <span class="comment-action">👍 67</span>
+                            <span class="comment-action">回复</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 相关视频 -->
+        <div class="related-videos">
+            <h3 class="related-title">相关视频</h3>
+            <div class="related-list">
+                <div class="related-item" onclick="window.location.href='video_detail.html'">
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&q=80" alt="相关视频" class="related-thumbnail">
+                    <div class="related-details">
+                        <div class="related-video-title">旅行摄影技巧：如何拍出令人惊艳的风景照片</div>
+                        <div class="related-channel">摄影学院</div>
+                        <div class="related-stats">8.9万次观看 • 1周前</div>
+                    </div>
+                </div>
+                
+                <div class="related-item" onclick="window.location.href='video_detail.html'">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80" alt="相关视频" class="related-thumbnail">
+                    <div class="related-details">
+                        <div class="related-video-title">世界十大最美旅行目的地推荐</div>
+                        <div class="related-channel">环球旅行</div>
+                        <div class="related-stats">15.6万次观看 • 2周前</div>
+                    </div>
+                </div>
+                
+                <div class="related-item" onclick="window.location.href='video_detail.html'">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=80" alt="相关视频" class="related-thumbnail">
+                    <div class="related-details">
+                        <div class="related-video-title">森林旅行指南：探索大自然的奥秘</div>
+                        <div class="related-channel">自然探索</div>
+                        <div class="related-stats">6.7万次观看 • 5天前</div>
+                    </div>
+                </div>
+                
+                <div class="related-item" onclick="window.location.href='video_detail.html'">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80" alt="相关视频" class="related-thumbnail">
+                    <div class="related-details">
+                        <div class="related-video-title">旅行vlog：一个人的背包旅行经历</div>
+                        <div class="related-channel">背包客日记</div>
+                        <div class="related-stats">4.3万次观看 • 1周前</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // 播放按钮点击事件
+    document.querySelector('.play-button').addEventListener('click', function() {
+        console.log('播放视频');
+        // 这里可以添加视频播放逻辑
+    });
+    
+    // 操作按钮事件
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (this.classList.contains('liked')) {
+                this.classList.remove('liked');
+                this.innerHTML = '<i class="bi bi-hand-thumbs-up"></i> 12.5K';
+            } else if (this.querySelector('.bi-hand-thumbs-up')) {
+                this.classList.add('liked');
+                this.innerHTML = '<i class="bi bi-hand-thumbs-up-fill"></i> 12.5K';
+            }
+            console.log(`执行操作: ${this.textContent.trim()}`);
+        });
+    });
+    
+    // 订阅按钮事件
+    document.querySelector('.subscribe-btn').addEventListener('click', function() {
+        if (this.classList.contains('subscribed')) {
+            this.classList.remove('subscribed');
+            this.textContent = '订阅';
+        } else {
+            this.classList.add('subscribed');
+            this.textContent = '已订阅';
+        }
+        console.log('订阅状态改变');
+    });
+    
+    // 评论表单提交
+    document.querySelector('.comment-btn').addEventListener('click', function() {
+        const input = document.querySelector('.comment-input');
+        const comment = input.value.trim();
+        if (comment) {
+            console.log(`发表评论: ${comment}`);
+            input.value = '';
+            // 这里可以添加评论提交逻辑
+        }
+    });
+    
+    // 评论操作事件
+    document.querySelectorAll('.comment-action').forEach(action => {
+        action.addEventListener('click', function() {
+            console.log(`评论操作: ${this.textContent}`);
+        });
+    });
+</script>
+</body>
+</html> 
