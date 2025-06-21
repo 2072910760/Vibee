@@ -3,143 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册 - Vibee</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/common.css">
+    <title>注册</title>
     <style>
-        .register-container {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0eaff 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 72px);
-            padding: 2rem;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
         }
-        .register-card {
-            background: #fff;
-            padding: 2.5rem 3rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            filter: blur(50px);
+            z-index: 0;
+        }
+        body::before {
+            width: 300px;
+            height: 300px;
+            top: -70px;
+            left: -70px;
+            background: rgba(173, 216, 230, 0.3);
+            filter: blur(60px);
+        }
+        body::after {
+            width: 400px;
+            height: 400px;
+            bottom: -100px;
+            right: -100px;
+            background: rgba(255, 204, 255, 0.3);
+            filter: blur(70px);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 480px;
+            height: 100%;
+            background-color: rgba(173, 216, 230, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-modal {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 420px;
+            min-height: 520px; /* 注册页面可能更高 */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            background: linear-gradient(90deg, #e3f2fd, #fce4ec);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .modal-header h2 {
+            margin: 0;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .close-btn {
+            font-size: 2.2rem;
+            cursor: pointer;
+            color: #8d8d8d;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: color 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #212121;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 40px 35px;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .account-login-area {
+            width: 100%;
+            max-width: 320px;
+            margin: auto;
             text-align: center;
         }
-        .register-card .logo {
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-        .register-card h2 {
+
+        .login-sub-title {
             font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            color: #424242;
+            margin-bottom: 35px;
+            letter-spacing: 0.5px;
         }
-        .register-card p {
-            color: #666;
-            margin-bottom: 2rem;
-        }
+
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
             text-align: left;
         }
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: #616161;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
         .form-group input {
             width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e9e9e9;
+            border-radius: 10px;
             font-size: 1rem;
-            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
         }
-        .email-group {
+        .form-group input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 2px rgba(33,150,243,0.15);
+            background-color: #ffffff;
+        }
+        .form-group .error-message {
+            color: #ff1744;
+            font-size: 0.85rem;
+            margin-top: 0.6rem;
+            display: none;
+            text-align: left;
+            font-weight: bold;
+        }
+        .form-group.error input {
+            border-color: #ff1744;
+            background: #fff8f8;
+        }
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        .form-group.with-button {
             display: flex;
-            gap: 1rem;
+            align-items: center;
+            gap: 10px;
         }
-        .email-group input {
+
+        .form-group.with-button input {
             flex-grow: 1;
         }
-        .otp-btn {
-            padding: 0.8rem 1rem;
+
+        .send-code-button {
+            padding: 0.9rem 1.2rem;
+            background: linear-gradient(to right, #c5e1a5 0%, #8bc34a 100%);
+            color: white;
             border: none;
-            background: #f1f3f5;
-            color: #555;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .register-btn {
-            width: 100%;
-            padding: 0.9rem;
-            border: none;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            color: #fff;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 1rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 3px 8px rgba(139, 195, 74, 0.3);
         }
-        .extra-links {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
+        .send-code-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(139, 195, 74, 0.4);
         }
-        .extra-links a {
-            color: #667eea;
+        .send-code-button:active {
+            transform: translateY(0);
+        }
+        .send-code-button:disabled {
+            background: #e0e0e0;
+            color: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        .password-strength {
+            height: 6px;
+            margin-top: 0.8rem;
+            border-radius: 3px;
+            background: #f0f0f0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            transition: all 0.4s ease-in-out;
+        }
+        .password-strength-bar.weak {
+            background: #ff8a80;
+            width: 33.33%;
+        }
+        .password-strength-bar.medium {
+            background: #ffd54f;
+            width: 66.66%;
+        }
+        .password-strength-bar.strong {
+            background: #66bb6a;
+            width: 100%;
+        }
+
+        .agreement-text {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            line-height: 1.5;
+        }
+        .agreement-text a {
+            color: #a7d9f7;
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .agreement-text a:hover {
+            text-decoration: underline;
+            color: #7ecaf7;
+        }
+
+        .primary-login-button {
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(to right, #81d4fa 0%, #42a5f5 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 12px rgba(66, 165, 245, 0.25);
+            margin-top: 25px; /* Adjust margin for single button */
+        }
+        .primary-login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(66, 165, 245, 0.35);
+        }
+        .primary-login-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(66, 165, 245, 0.15);
+        }
+        .primary-login-button.loading {
+            position: relative;
+            pointer-events: none;
+            background: linear-gradient(to right, #a7d9f7 0%, #81d4fa 100%);
+        }
+        .primary-login-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #ffffff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: loading 0.8s linear infinite;
+        }
+        @keyframes loading {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 0.9rem 1.8rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 8px;
+            transform: translateX(120%);
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            z-index: 2000;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-modal {
+                width: 95%;
+                min-height: auto;
+            }
+            .modal-content {
+                padding: 30px 25px;
+            }
+            .login-sub-title {
+                font-size: 1.5rem;
+                margin-bottom: 25px;
+            }
+            .form-group input {
+                padding: 0.9rem 1rem;
+            }
+            .primary-login-button {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+            .send-code-button {
+                padding: 0.8rem 1rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
-<div class="header">
-    <div class="logo">
-        Vibee
-        <span class="bee bee-1">🐝</span>
-        <span class="bee bee-2">🐝</span>
-        <span class="bee bee-3">🐝</span>
-    </div>
-    <div class="user-avatar" tabindex="0">
-        <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
-        <div class="user-menu">
-            <div class="user-menu-item" onclick="window.location.href='login.html'">登录</div>
-            <div class="user-menu-item" onclick="window.location.href='email_register.html'">注册</div>
+    <div class="modal-overlay">
+        <div class="login-modal">
+            <div class="modal-header">
+                <h2>注册</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-content">
+                <div class="account-login-area">
+                    <h3 class="login-sub-title">创建账号</h3>
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" name="email" placeholder="请输入邮箱" required>
+                            <div class="error-message">请输入有效的邮箱地址</div>
+                        </div>
+                        <div class="form-group with-button">
+                            <input type="text" id="verificationCode" name="verificationCode" placeholder="请输入验证码" required>
+                            <button type="button" class="send-code-button" id="sendCodeBtn">发送验证码</button>
+                            <div class="error-message">请输入验证码</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                            <div class="error-message">密码不能为空</div>
+                            <div class="password-strength">
+                                <div class="password-strength-bar"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">确认密码</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" required>
+                            <div class="error-message">两次输入的密码不一致</div>
+                        </div>
+                        <div class="agreement-text">
+                            注册即代表同意 <a href="#">用户协议</a> 和 <a href="#">隐私政策</a>
+                        </div>
+                        <button type="submit" class="primary-login-button">注册</button>
+                    </form>
+                    <div class="agreement-text">
+                        已有账号？<a href="login.html">立即登录</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="register-container">
-    <div class="register-card">
-        <div class="logo">
-            Vibee
-            <span class="bee bee-1">🐝</span>
-            <span class="bee bee-2">🐝</span>
-            <span class="bee bee-3">🐝</span>
-        </div>
-        <h2>创建您的账户</h2>
-        <p>加入Vibee，分享您的世界</p>
-        <form>
-            <div class="form-group">
-                <label for="username">用户名</label>
-                <input type="text" id="username" required>
-            </div>
-            <div class="form-group email-group">
-                <input type="email" id="email" placeholder="邮箱地址" required>
-                <button type="button" class="otp-btn">发送验证码</button>
-            </div>
-            <div class="form-group">
-                <label for="otp">邮箱验证码</label>
-                <input type="text" id="otp" required>
-            </div>
-            <div class="form-group">
-                <label for="password">设置密码</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit" class="register-btn">注册</button>
-        </form>
-        <div class="extra-links">
-            已有账户? <a href="login.html">直接登录</a>
-        </div>
-    </div>
-</div>
+    <div class="toast"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            const emailInput = document.getElementById('email');
+            const verificationCodeInput = document.getElementById('verificationCode');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const sendCodeBtn = document.getElementById('sendCodeBtn');
+            const toast = document.querySelector('.toast');
+            const registerButton = document.querySelector('.primary-login-button');
+
+            // 表单验证
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function showError(input, message) {
+                const formGroup = input.parentElement;
+                formGroup.classList.add('error');
+                formGroup.querySelector('.error-message').textContent = message;
+            }
+
+            function clearError(input) {
+                const formGroup = input.parentElement;
+                formGroup.classList.remove('error');
+            }
+
+            function showToast(message, duration = 3000) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, duration);
+            }
+
+            // 发送验证码
+            let countdown = 0;
+            let timer = null;
+
+            function startCountdown() {
+                countdown = 60;
+                sendCodeBtn.disabled = true;
+                timer = setInterval(() => {
+                    countdown--;
+                    sendCodeBtn.textContent = `${countdown}秒后重试`;
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        sendCodeBtn.disabled = false;
+                        sendCodeBtn.textContent = '发送验证码';
+                    }
+                }, 1000);
+            }
+
+            sendCodeBtn.addEventListener('click', async function() {
+                const email = emailInput.value;
+                
+                if (!validateEmail(email)) {
+                    showError(emailInput, '请输入有效的邮箱地址');
+                    return;
+                }
+
+                clearError(emailInput);
+                startCountdown();
+
+                try {
+                    // 这里添加发送验证码的请求
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // 模拟请求
+                    showToast('验证码已发送到您的邮箱');
+                } catch (error) {
+                    showToast('发送失败，请重试');
+                    clearInterval(timer);
+                    sendCodeBtn.disabled = false;
+                    sendCodeBtn.textContent = '发送验证码';
+                }
+            });
+
+            // 表单提交
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                
+                // 验证邮箱
+                if (!validateEmail(emailInput.value)) {
+                    showError(emailInput, '请输入有效的邮箱地址');
+                    isValid = false;
+                } else {
+                    clearError(emailInput);
+                }
+
+                // 验证验证码
+                if (!verificationCodeInput.value) {
+                    showError(verificationCodeInput, '请输入验证码');
+                    isValid = false;
+                } else {
+                    clearError(verificationCodeInput);
+                }
+
+                // 验证密码
+                if (passwordInput.value.length === 0) {
+                    showError(passwordInput, '请输入密码');
+                    isValid = false;
+                } else {
+                    clearError(passwordInput);
+                }
+
+                // 验证确认密码
+                if (confirmPasswordInput.value !== passwordInput.value) {
+                    showError(confirmPasswordInput, '两次输入的密码不一致');
+                    isValid = false;
+                } else {
+                    clearError(confirmPasswordInput);
+                }
+
+                if (!isValid) return;
+
+                // 显示加载状态
+                registerButton.classList.add('loading');
+                registerButton.textContent = '注册中...';
+
+                try {
+                    // 这里添加实际的注册请求
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // 模拟请求
+                    
+                    showToast('注册成功！');
+                    // 注册成功后的跳转
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 1000);
+                } catch (error) {
+                    showToast('注册失败，请重试');
+                } finally {
+                    registerButton.classList.remove('loading');
+                    registerButton.textContent = '注册';
+                }
+            });
+
+            // 关闭按钮
+            document.querySelector('.close-btn').addEventListener('click', function() {
+                window.location.href = '/';
+            });
+
+            // 表单提交防重复
+            const form = document.getElementById('registerForm');
+            if(form){
+                form.addEventListener('submit', function(e) {
+                    const btn = form.querySelector('.primary-login-button');
+                    if (btn.disabled) return;
+                    btn.disabled = true;
+                    setTimeout(()=>{btn.disabled=false;}, 1500);
+                });
+            }
+        });
+    </script>
 </body>
 </html> 

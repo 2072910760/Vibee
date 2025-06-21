@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>关键词搜索 - Vibee</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/common.css">
+    <title>关键词搜索</title>
+    <link rel="stylesheet" href="../css/vibee-font.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
         body {
             margin: 0;
             background: #f6f8fb;
+            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
             color: #222;
         }
         
@@ -24,6 +27,25 @@
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+        
+        .logo {
+            font-family: 'VibeeFont', sans-serif;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #FFD93D, #FF6B6B);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 8s ease infinite, float 6s ease-in-out infinite, glow 3s ease-in-out infinite;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
         }
         
         .search-box {
@@ -227,57 +249,75 @@
             color: white;
             border: none;
             border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
             font-size: 1rem;
             font-weight: 500;
-        }
-        
-        .search-btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
-        }
-        
-        /* 筛选器 */
-        .filters {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .filter-group {
+            cursor: pointer;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         
-        .filter-label {
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: 500;
+        .search-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
         }
         
-        .filter-select {
+        /* 搜索选项 */
+        .search-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             padding: 0.5rem 1rem;
+            background: #f3f6fd;
             border: 1px solid #e1e1e1;
-            border-radius: 8px;
-            background: #fff;
-            color: #333;
+            border-radius: 20px;
             font-size: 0.9rem;
             cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .filter-select:focus {
-            outline: none;
+        .search-option:hover,
+        .search-option.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        /* 热门搜索 */
+        .hot-searches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        
+        .hot-search-tag {
+            padding: 0.4rem 0.8rem;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 16px;
+            color: #666;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .hot-search-tag:hover {
+            background: #667eea;
+            color: white;
             border-color: #667eea;
         }
         
         /* 搜索结果 */
         .search-results {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
-            padding: 2rem;
+            margin-top: 2rem;
         }
         
         .results-header {
@@ -288,18 +328,18 @@
         }
         
         .results-count {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #666;
         }
         
-        .sort-options {
+        .results-filter {
             display: flex;
-            gap: 0.5rem;
+            gap: 1rem;
         }
         
-        .sort-btn {
+        .filter-btn {
             padding: 0.5rem 1rem;
-            background: #f3f6fd;
+            background: #fff;
             border: 1px solid #e1e1e1;
             border-radius: 8px;
             color: #666;
@@ -308,85 +348,73 @@
             font-size: 0.9rem;
         }
         
-        .sort-btn:hover,
-        .sort-btn.active {
+        .filter-btn:hover,
+        .filter-btn.active {
             background: #667eea;
             color: white;
             border-color: #667eea;
         }
         
-        /* 视频列表 */
-        .video-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        /* 视频网格 */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
         
-        .video-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 12px;
-            transition: all 0.2s;
+        .video-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            overflow: hidden;
+            transition: all 0.3s ease;
             cursor: pointer;
         }
         
-        .video-item:hover {
-            background: #f3f6fd;
-            transform: translateY(-2px);
+        .video-card:hover {
+            box-shadow: 0 8px 24px rgba(102,126,234,0.15);
+            transform: translateY(-5px);
         }
         
         .video-thumbnail {
-            width: 120px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            flex-shrink: 0;
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
         }
         
-        .video-details {
-            flex: 1;
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.05);
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .video-info {
+            padding: 1.2rem;
         }
         
         .video-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: #333;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-        }
-        
-        .video-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .channel-name {
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .video-stats {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.8rem;
-            color: #888;
-        }
-        
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
-        .video-description {
-            font-size: 0.9rem;
-            color: #666;
+            margin-bottom: 0.8rem;
             line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -394,31 +422,36 @@
             overflow: hidden;
         }
         
-        /* 分页 */
-        .pagination {
+        .video-channel {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
+            margin-bottom: 0.8rem;
         }
         
-        .page-btn {
-            padding: 0.5rem 1rem;
-            background: #f3f6fd;
-            border: 1px solid #e1e1e1;
-            border-radius: 8px;
-            color: #666;
-            cursor: pointer;
-            transition: all 0.2s;
+        .channel-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            object-fit: cover;
+        }
+        
+        .channel-name {
             font-size: 0.9rem;
+            color: #666;
         }
         
-        .page-btn:hover,
-        .page-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        
+        .video-stats {
+            display: flex;
+            gap: 1rem;
         }
         
         /* 响应式设计 */
@@ -441,30 +474,17 @@
                 border-bottom: 1px solid #e1e1e1;
             }
             
-            .main-content {
-                padding: 1rem;
-            }
-            
             .search-form {
                 flex-direction: column;
             }
             
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1rem;
             }
             
-            .filter-group {
-                justify-content: space-between;
-            }
-            
-            .video-item {
-                flex-direction: column;
-            }
-            
-            .video-thumbnail {
-                width: 100%;
-                height: 200px;
+            .main-content {
+                padding: 1rem;
             }
         }
         
@@ -473,6 +493,10 @@
                 flex-direction: column;
                 height: auto;
                 padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
             }
             
             .search-box {
@@ -485,26 +509,32 @@
                 margin-left: 0;
             }
             
-            .results-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
+            .video-grid {
+                grid-template-columns: 1fr;
             }
-            
-            .sort-options {
-                justify-content: center;
-            }
+        }
+        
+        /* 动画效果 */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(102,126,234,0.3); }
+            50% { box-shadow: 0 0 20px rgba(102,126,234,0.6); }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">
-            Vibee
-            <span class="bee bee-1">🐝</span>
-            <span class="bee bee-2">🐝</span>
-            <span class="bee bee-3">🐝</span>
-        </div>
+        <div class="logo">Vi<span class="bee-body">bee</span></div>
         <div class="search-box">
             <input type="text" placeholder="搜索视频、频道或用户...">
         </div>
@@ -518,13 +548,13 @@
     </div>
     
     <div class="layout-container">
-        <aside class="sidebar">
+        <div class="sidebar">
             <div class="sidebar-section">
-                <h3 class="sidebar-title">主要功能</h3>
+                <div class="sidebar-title">主要功能</div>
                 <ul class="sidebar-nav">
                     <li class="sidebar-nav-item">
                         <a href="video_initial.html" class="sidebar-nav-link">
-                            <i class="bi bi-house"></i>
+                            <i class="bi bi-house-door"></i>
                             首页推荐
                         </a>
                     </li>
@@ -544,12 +574,12 @@
             </div>
             
             <div class="sidebar-section">
-                <h3 class="sidebar-title">用户中心</h3>
+                <div class="sidebar-title">用户中心</div>
                 <ul class="sidebar-nav">
                     <li class="sidebar-nav-item">
                         <a href="../user/edit_profile.html" class="sidebar-nav-link">
                             <i class="bi bi-person"></i>
-                            编辑个人资料
+                            个人资料
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
@@ -559,15 +589,15 @@
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
-                        <a href="../user/watch_history.html" class="sidebar-nav-link">
-                            <i class="bi bi-clock-history"></i>
-                            观看历史
-                        </a>
-                    </li>
-                    <li class="sidebar-nav-item">
                         <a href="../user/liked_favorited_videos.html" class="sidebar-nav-link">
                             <i class="bi bi-heart"></i>
                             收藏视频
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="../user/watch_history.html" class="sidebar-nav-link">
+                            <i class="bi bi-clock-history"></i>
+                            观看历史
                         </a>
                     </li>
                     <li class="sidebar-nav-item">
@@ -578,260 +608,253 @@
                     </li>
                 </ul>
             </div>
-        </aside>
+        </div>
         
-        <main class="main-content">
+        <div class="main-content">
             <div class="content-header">
                 <h1 class="content-title">关键词搜索</h1>
-                <p class="content-subtitle">精确查找您感兴趣的视频内容</p>
+                <p class="content-subtitle">快速找到你感兴趣的视频内容</p>
             </div>
             
             <!-- 搜索区域 -->
             <div class="search-section">
                 <form class="search-form">
-                    <input type="text" class="search-input" placeholder="输入关键词搜索视频..." value="旅行风景">
+                    <input type="text" class="search-input" placeholder="输入关键词搜索视频..." id="searchInput">
                     <button type="submit" class="search-btn">
                         <i class="bi bi-search"></i>
                         搜索
                     </button>
                 </form>
                 
-                <!-- 筛选器 -->
-                <div class="filters">
-                    <div class="filter-group">
-                        <label class="filter-label">时长:</label>
-                        <select class="filter-select">
-                            <option>不限</option>
-                            <option>4分钟以下</option>
-                            <option>4-20分钟</option>
-                            <option>20分钟以上</option>
-                        </select>
+                <!-- 搜索选项 -->
+                <div class="search-options">
+                    <div class="search-option active">
+                        <i class="bi bi-video"></i>
+                        视频
                     </div>
-                    
-                    <div class="filter-group">
-                        <label class="filter-label">上传时间:</label>
-                        <select class="filter-select">
-                            <option>不限</option>
-                            <option>1小时内</option>
-                            <option>今天</option>
-                            <option>本周</option>
-                            <option>本月</option>
-                            <option>今年</option>
-                        </select>
+                    <div class="search-option">
+                        <i class="bi bi-person"></i>
+                        用户
                     </div>
-                    
-                    <div class="filter-group">
-                        <label class="filter-label">排序:</label>
-                        <select class="filter-select">
-                            <option>相关度</option>
-                            <option>上传时间</option>
-                            <option>观看次数</option>
-                            <option>评分</option>
-                        </select>
+                    <div class="search-option">
+                        <i class="bi bi-tag"></i>
+                        标签
                     </div>
-                    
-                    <div class="filter-group">
-                        <label class="filter-label">类型:</label>
-                        <select class="filter-select">
-                            <option>全部</option>
-                            <option>视频</option>
-                            <option>频道</option>
-                            <option>播放列表</option>
-                        </select>
+                    <div class="search-option">
+                        <i class="bi bi-collection"></i>
+                        频道
                     </div>
+                </div>
+                
+                <!-- 热门搜索 -->
+                <div class="hot-searches">
+                    <span class="hot-search-tag">#旅行</span>
+                    <span class="hot-search-tag">#美食</span>
+                    <span class="hot-search-tag">#音乐</span>
+                    <span class="hot-search-tag">#科技</span>
+                    <span class="hot-search-tag">#教育</span>
+                    <span class="hot-search-tag">#游戏</span>
+                    <span class="hot-search-tag">#健身</span>
+                    <span class="hot-search-tag">#摄影</span>
                 </div>
             </div>
             
             <!-- 搜索结果 -->
-            <div class="search-results">
+            <div class="search-results" id="searchResults" style="display: none;">
                 <div class="results-header">
-                    <div class="results-count">找到 1,234 个相关结果</div>
-                    <div class="sort-options">
-                        <button class="sort-btn active">相关度</button>
-                        <button class="sort-btn">上传时间</button>
-                        <button class="sort-btn">观看次数</button>
-                        <button class="sort-btn">评分</button>
+                    <div class="results-count">找到 <span id="resultCount">0</span> 个相关视频</div>
+                    <div class="results-filter">
+                        <button class="filter-btn active">相关度</button>
+                        <button class="filter-btn">上传时间</button>
+                        <button class="filter-btn">观看次数</button>
+                        <button class="filter-btn">评分</button>
                     </div>
                 </div>
                 
-                <div class="video-list">
-                    <div class="video-item" onclick="window.location.href='video_detail.html'">
-                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="视频缩略图" class="video-thumbnail">
-                        <div class="video-details">
-                            <h3 class="video-title">2024年最值得一看的旅行风景视频合集</h3>
-                            <div class="video-meta">
-                                <span class="channel-name">旅行频道</span>
-                                <div class="video-stats">
-                                    <span class="stat-item">
-                                        <i class="bi bi-eye"></i>
-                                        1.2万次观看
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-clock"></i>
-                                        3天前
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-play-circle"></i>
-                                        12:34
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="video-description">探索世界各地的美丽风景，从壮丽的山脉到宁静的海滩，这个视频合集将带您领略大自然的鬼斧神工。包含详细的旅行攻略和拍摄技巧分享。</p>
-                        </div>
-                    </div>
-                    
-                    <div class="video-item" onclick="window.location.href='video_detail.html'">
-                        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&q=80" alt="视频缩略图" class="video-thumbnail">
-                        <div class="video-details">
-                            <h3 class="video-title">旅行摄影技巧：如何拍出令人惊艳的风景照片</h3>
-                            <div class="video-meta">
-                                <span class="channel-name">摄影学院</span>
-                                <div class="video-stats">
-                                    <span class="stat-item">
-                                        <i class="bi bi-eye"></i>
-                                        8.9万次观看
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-clock"></i>
-                                        1周前
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-play-circle"></i>
-                                        18:45
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="video-description">专业的旅行摄影师分享拍摄技巧，从构图到光线运用，教您如何在不同环境下拍出完美的风景照片。适合摄影爱好者和旅行者。</p>
-                        </div>
-                    </div>
-                    
-                    <div class="video-item" onclick="window.location.href='video_detail.html'">
-                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80" alt="视频缩略图" class="video-thumbnail">
-                        <div class="video-details">
-                            <h3 class="video-title">世界十大最美旅行目的地推荐</h3>
-                            <div class="video-meta">
-                                <span class="channel-name">环球旅行</span>
-                                <div class="video-stats">
-                                    <span class="stat-item">
-                                        <i class="bi bi-eye"></i>
-                                        15.6万次观看
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-clock"></i>
-                                        2周前
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-play-circle"></i>
-                                        25:12
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="video-description">精选全球最美的旅行目的地，包括详细的旅行攻略、最佳拍摄时间、住宿推荐等信息。为您的下一次旅行提供灵感。</p>
-                        </div>
-                    </div>
-                    
-                    <div class="video-item" onclick="window.location.href='video_detail.html'">
-                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=80" alt="视频缩略图" class="video-thumbnail">
-                        <div class="video-details">
-                            <h3 class="video-title">森林旅行指南：探索大自然的奥秘</h3>
-                            <div class="video-meta">
-                                <span class="channel-name">自然探索</span>
-                                <div class="video-stats">
-                                    <span class="stat-item">
-                                        <i class="bi bi-eye"></i>
-                                        6.7万次观看
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-clock"></i>
-                                        5天前
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-play-circle"></i>
-                                        32:18
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="video-description">深入森林探索，了解各种植物和动物的生活习性，学习如何在野外安全旅行。适合喜欢户外活动和自然探索的朋友。</p>
-                        </div>
-                    </div>
-                    
-                    <div class="video-item" onclick="window.location.href='video_detail.html'">
-                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80" alt="视频缩略图" class="video-thumbnail">
-                        <div class="video-details">
-                            <h3 class="video-title">旅行vlog：一个人的背包旅行经历</h3>
-                            <div class="video-meta">
-                                <span class="channel-name">背包客日记</span>
-                                <div class="video-stats">
-                                    <span class="stat-item">
-                                        <i class="bi bi-eye"></i>
-                                        4.3万次观看
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-clock"></i>
-                                        1周前
-                                    </span>
-                                    <span class="stat-item">
-                                        <i class="bi bi-play-circle"></i>
-                                        45:30
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="video-description">记录一个人背包旅行的真实经历，包括遇到的困难、有趣的人和事，以及旅行中的感悟和收获。</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 分页 -->
-                <div class="pagination">
-                    <button class="page-btn">上一页</button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
-                    <button class="page-btn">下一页</button>
+                <div class="video-grid" id="videoGrid">
+                    <!-- 搜索结果将在这里动态显示 -->
                 </div>
             </div>
-        </main>
+            
+            <!-- 默认显示推荐内容 -->
+            <div class="search-results" id="defaultResults">
+                <div class="results-header">
+                    <div class="results-count">推荐视频</div>
+                    <div class="results-filter">
+                        <button class="filter-btn active">最新</button>
+                        <button class="filter-btn">热门</button>
+                        <button class="filter-btn">推荐</button>
+                    </div>
+                </div>
+                
+                <div class="video-grid">
+                    <div class="video-card" onclick="window.location.href='video_detail.html'">
+                        <div class="video-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="视频封面">
+                            <div class="video-duration">12:34</div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">2024年最值得一看的旅行风景视频合集</h3>
+                            <div class="video-channel">
+                                <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=identicon&s=24" alt="频道头像">
+                                <span class="channel-name">旅行频道</span>
+                            </div>
+                            <div class="video-meta">
+                                <div class="video-stats">
+                                    <span>1.2万次观看</span>
+                                    <span>3天前</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card" onclick="window.location.href='video_detail.html'">
+                        <div class="video-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=400&q=80" alt="视频封面">
+                            <div class="video-duration">8:45</div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">科技行业的未来发展趋势深度解析</h3>
+                            <div class="video-channel">
+                                <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=wavatar&s=24" alt="频道头像">
+                                <span class="channel-name">科技前沿</span>
+                            </div>
+                            <div class="video-meta">
+                                <div class="video-stats">
+                                    <span>5.6万次观看</span>
+                                    <span>1周前</span>
+                                </div>
+                    </div>
+                </div>
+            </div>
+            
+                    <div class="video-card" onclick="window.location.href='video_detail.html'">
+                        <div class="video-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="视频封面">
+                            <div class="video-duration">15:22</div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">学习自然风光摄影的实用技巧教程</h3>
+                            <div class="video-channel">
+                                <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=monsterid&s=24" alt="频道头像">
+                                <span class="channel-name">摄影教程</span>
+                            </div>
+                            <div class="video-meta">
+                                <div class="video-stats">
+                                    <span>2.8万次观看</span>
+                                    <span>2周前</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 搜索表单提交
-        document.querySelector('.search-form').addEventListener('submit', function(e) {
+        // 搜索功能
+        const searchForm = document.querySelector('.search-form');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const defaultResults = document.getElementById('defaultResults');
+        const resultCount = document.getElementById('resultCount');
+        const videoGrid = document.getElementById('videoGrid');
+        
+        searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const query = this.querySelector('.search-input').value;
-            console.log(`搜索: ${query}`);
-            // 这里可以添加搜索逻辑
+            const query = searchInput.value.trim();
+            if (query) {
+                performSearch(query);
+            }
         });
         
-        // 筛选器变化
-        document.querySelectorAll('.filter-select').forEach(select => {
-            select.addEventListener('change', function() {
-                console.log(`筛选条件变化: ${this.value}`);
-                // 这里可以添加筛选逻辑
+        // 热门搜索标签点击
+        document.querySelectorAll('.hot-search-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const query = this.textContent.replace('#', '');
+                searchInput.value = query;
+                performSearch(query);
             });
         });
         
-        // 排序按钮切换
-        document.querySelectorAll('.sort-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        // 搜索选项切换
+        document.querySelectorAll('.search-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.search-option').forEach(o => o.classList.remove('active'));
                 this.classList.add('active');
-                console.log(`排序方式: ${this.textContent}`);
-                // 这里可以添加排序逻辑
             });
         });
         
-        // 分页按钮
-        document.querySelectorAll('.page-btn').forEach(btn => {
+        // 筛选按钮切换
+        document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                if (this.textContent !== '上一页' && this.textContent !== '下一页') {
-                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                }
-                console.log(`跳转到页面: ${this.textContent}`);
-                // 这里可以添加分页逻辑
+                const parent = this.closest('.results-filter');
+                parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
             });
+        });
+        
+        function performSearch(query) {
+            // 模拟搜索功能
+            console.log('搜索:', query);
+            
+            // 显示搜索结果，隐藏默认结果
+            searchResults.style.display = 'block';
+            defaultResults.style.display = 'none';
+            
+            // 模拟搜索结果
+            const mockResults = [
+                {
+                    title: `搜索结果：${query}`,
+                    channel: '搜索结果频道',
+                    views: '1.5万次观看',
+                    time: '1天前',
+                    duration: '10:30',
+                    thumbnail: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80'
+                },
+                {
+                    title: `关于${query}的精彩视频`,
+                    channel: '相关频道',
+                    views: '8.9万次观看',
+                    time: '3天前',
+                    duration: '15:45',
+                    thumbnail: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=400&q=80'
+                }
+            ];
+            
+            resultCount.textContent = mockResults.length;
+            
+            // 生成搜索结果HTML
+            videoGrid.innerHTML = mockResults.map(video => `
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail}" alt="视频封面">
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-channel">
+                            <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=identicon&s=24" alt="频道头像">
+                            <span class="channel-name">${video.channel}</span>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-stats">
+                                <span>${video.views}</span>
+                                <span>${video.time}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 视频卡片点击事件
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.video-card')) {
+                console.log('播放视频');
+            }
         });
     </script>
 </body>

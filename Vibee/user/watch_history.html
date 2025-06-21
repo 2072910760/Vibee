@@ -4,97 +4,585 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>观看历史 - Vibee</title>
+    <link rel="stylesheet" href="../css/vibee-font.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/common.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
+        body {
+            margin: 0;
+            background: #f6f8fb;
+            font-family: 'Poppins', sans-serif;
+            color: #222;
+        }
+        
+        /* 统一头部样式 */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.06);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: #2c3e50;
+            position: relative;
+            user-select: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .bee {
+            position: absolute;
+            font-size: 1rem;
+            animation: fly 12s linear infinite;
+            opacity: 0;
+            user-select: none;
+        }
+        
+        .bee-1 {
+            top: -12px;
+            left: -20px;
+            transform: rotate(-15deg);
+            animation-duration: 10s;
+            animation-delay: -2s;
+        }
+        
+        .bee-2 {
+            top: 50%;
+            right: -25px;
+            transform: translateY(-50%) rotate(15deg);
+            animation-duration: 8s;
+            animation-delay: 0s;
+        }
+        
+        .bee-3 {
+            bottom: -10px;
+            left: 40%;
+            transform: rotate(5deg);
+            animation-duration: 12s;
+            animation-delay: -6s;
+        }
+        
+        @keyframes fly {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            25% { transform: translateX(10px) translateY(-15px) rotate(20deg); }
+            50% { transform: translateX(-15px) translateY(10px) rotate(-15deg); }
+            75% { transform: translateX(5px) translateY(20px) rotate(10deg); }
+            90% { opacity: 1; }
+            100% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0; }
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+            margin-right: auto;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.7rem 1.3rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 24px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            background: #f7f9fc;
+        }
+        
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        
+        .user-avatar {
+            margin-left: 1.5rem;
+            position: relative;
+            justify-self: end;
+        }
+        
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: border 0.2s;
+        }
+        
+        .avatar-img:hover {
+            border-color: #667eea;
+        }
+        
+        .user-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 52px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.13);
+            border-radius: 10px;
+            min-width: 140px;
+            z-index: 100;
+            padding: 0.5rem 0;
+        }
+        
+        .user-avatar:hover .user-menu,
+        .user-avatar:focus-within .user-menu {
+            display: block;
+        }
+        
+        .user-menu-item {
+            padding: 0.7rem 1.2rem;
+            color: #333;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        
+        .user-menu-item:hover {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        
+        /* 统一布局容器 */
+        .layout-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e1e1e1;
+            padding: 2rem 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #555;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        
+        .sidebar-nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f6f8fb;
+        }
+        
         .content-header {
+            margin-bottom: 2rem;
+        }
+        
+        .content-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .content-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* 历史记录头部 */
+        .history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
-        }
-        .content-header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        .filter-tags {
-            display: flex;
-            gap: 0.8rem;
-        }
-        .filter-tag {
-            background: #e9ecef;
-            padding: 0.5rem 1rem;
+            background: #fff;
+            padding: 1.5rem;
             border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+        }
+        
+        .history-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .history-action-btn {
+            background: #f3f6fd;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            padding: 0.6rem 1.2rem;
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
-        }
-        .filter-tag:hover {
-            background: #d8dde2;
-        }
-        .filter-tag.active {
-            background: #667eea;
-            color: #fff;
-            font-weight: 500;
-        }
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .video-card-horizontal {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 0.5rem;
+        }
+        
+        .history-action-btn:hover {
+            background: #e6ebfd;
+        }
+        
+        .history-action-btn.danger {
+            color: #ff5252;
+        }
+        
+        .history-action-btn.danger:hover {
+            background: #fff2f2;
+        }
+        
+        /* 历史记录标签页 */
+        .history-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: #fff;
             padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            overflow-x: auto;
+        }
+        
+        .history-tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            color: #757575;
+            position: relative;
+            font-weight: 500;
+            white-space: nowrap;
             transition: all 0.2s;
         }
-        .video-card-horizontal:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+        
+        .history-tab:hover {
+            color: #667eea;
         }
-        .video-card-horizontal img {
-            width: 200px;
-            height: 112px;
-            object-fit: cover;
-            border-radius: 8px;
+        
+        .history-tab.active {
+            color: #667eea;
         }
-        .video-details {
-            flex-grow: 1;
+        
+        .history-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #667eea;
         }
-        .video-details h3 {
-            margin: 0 0 0.5rem;
-            font-size: 1.15rem;
+        
+        /* 日期分组 */
+        .date-section {
+            margin-bottom: 3rem;
+        }
+        
+        .date-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
             font-weight: 600;
+            font-size: 1.1rem;
         }
-        .video-details p {
-            margin: 0;
-            font-size: 0.95rem;
+        
+        /* 视频网格 */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .video-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .video-card:hover {
+            box-shadow: 0 8px 24px rgba(102,126,234,0.15);
+            transform: translateY(-5px);
+        }
+        
+        .card-img-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .video-card:hover .card-img {
+            transform: scale(1.05);
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .video-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .video-progress-bar {
+            height: 100%;
+            background: #ff5252;
+            transition: width 0.3s ease;
+        }
+        
+        .card-body {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #333;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-channel {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .channel-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            object-fit: cover;
+        }
+        
+        .channel-name {
+            font-size: 0.9rem;
             color: #666;
         }
-        .video-actions {
+        
+        .card-meta {
             display: flex;
-            gap: 0.8rem;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: auto;
         }
-        .action-btn {
-            background: transparent;
+        
+        .card-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+        }
+        
+        .video-card:hover .card-actions {
+            display: block;
+        }
+        
+        .card-action-btn {
+            background: rgba(255,255,255,0.9);
+            color: #333;
             border: none;
-            font-size: 1.5rem;
-            color: #888;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
         }
-        .action-btn:hover {
-            color: #2c3e50;
+        
+        .card-action-btn:hover {
+            background: #fff;
+            transform: scale(1.1);
         }
-        .action-btn.delete:hover {
-            color: #e74c3c;
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: #757575;
         }
-        .action-btn.play:hover {
-            color: #667eea;
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #e0e0e0;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #424242;
+        }
+        
+        .empty-state p {
+            font-size: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid #e1e1e1;
+            }
+            
+            .history-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .history-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .history-tabs {
+                overflow-x: auto;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) { 
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            .search-box {
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .user-avatar {
+                margin-left: 0;
+            }
+            
+            .history-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -178,88 +666,88 @@
                         </a>
                     </li>
                 </ul>
-            </div>
         </div>
-        
-        <div class="main-content">
+    </div>
+    
+    <div class="main-content">
             <div class="content-header">
                 <h1 class="content-title">观看历史</h1>
                 <p class="content-subtitle">查看你最近观看的视频记录</p>
             </div>
             
             <!-- 历史记录头部 -->
-            <div class="history-header">
-                <div class="history-actions">
-                    <button class="history-action-btn">
-                        <i class="bi bi-filter"></i> 筛选
-                    </button>
-                    <button class="history-action-btn danger">
-                        <i class="bi bi-trash"></i> 清空历史
-                    </button>
-                </div>
+        <div class="history-header">
+            <div class="history-actions">
+                <button class="history-action-btn">
+                    <i class="bi bi-filter"></i> 筛选
+                </button>
+                <button class="history-action-btn danger">
+                    <i class="bi bi-trash"></i> 清空历史
+                </button>
             </div>
-            
+        </div>
+        
             <!-- 历史记录标签页 -->
-            <div class="history-tabs">
-                <div class="history-tab active">全部历史</div>
-                <div class="history-tab">今天</div>
-                <div class="history-tab">昨天</div>
-                <div class="history-tab">本周</div>
-                <div class="history-tab">本月</div>
-            </div>
-            
+        <div class="history-tabs">
+            <div class="history-tab active">全部历史</div>
+            <div class="history-tab">今天</div>
+            <div class="history-tab">昨天</div>
+            <div class="history-tab">本周</div>
+            <div class="history-tab">本月</div>
+        </div>
+        
             <!-- 今天的历史记录 -->
-            <div class="date-section">
-                <div class="date-header">今天</div>
-                <div class="history-grid">
+        <div class="date-section">
+            <div class="date-header">今天</div>
+            <div class="history-grid">
                     <div class="video-card" onclick="window.location.href='../video/video_detail.html'">
-                        <div class="card-img-container">
-                            <img class="card-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="视频封面">
-                            <div class="video-duration">10:25</div>
-                            <div class="video-progress">
-                                <div class="video-progress-bar" style="width: 80%;"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="card-action-btn" title="删除记录">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </div>
+                    <div class="card-img-container">
+                        <img class="card-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="视频封面">
+                        <div class="video-duration">10:25</div>
+                        <div class="video-progress">
+                            <div class="video-progress-bar" style="width: 80%;"></div>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">2024年最值得一看的旅行风景视频</h3>
-                            <div class="card-channel">
-                                <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=identicon&s=24" alt="频道头像">
-                                <span class="channel-name">旅行频道</span>
-                            </div>
-                            <div class="card-meta">
-                                <span>观看于 2小时前</span>
-                                <span>已观看 80%</span>
-                            </div>
+                        <div class="card-actions">
+                            <button class="card-action-btn" title="删除记录">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
                         </div>
                     </div>
-                    
-                    <div class="video-card" onclick="window.location.href='../video/video_detail.html'">
-                        <div class="card-img-container">
-                            <img class="card-img" src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=400&q=80" alt="视频封面">
-                            <div class="video-duration">18:42</div>
-                            <div class="video-progress">
-                                <div class="video-progress-bar" style="width: 35%;"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="card-action-btn" title="删除记录">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </div>
+                    <div class="card-body">
+                        <h3 class="card-title">2024年最值得一看的旅行风景视频</h3>
+                        <div class="card-channel">
+                            <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=identicon&s=24" alt="频道头像">
+                            <span class="channel-name">旅行频道</span>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">科技行业的未来发展趋势解析</h3>
-                            <div class="card-channel">
-                                <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=wavatar&s=24" alt="频道头像">
-                                <span class="channel-name">科技前沿</span>
-                            </div>
-                            <div class="card-meta">
-                                <span>观看于 5小时前</span>
-                                <span>已观看 35%</span>
+                        <div class="card-meta">
+                            <span>观看于 2小时前</span>
+                            <span>已观看 80%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="video-card" onclick="window.location.href='../video/video_detail.html'">
+                    <div class="card-img-container">
+                        <img class="card-img" src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=400&q=80" alt="视频封面">
+                        <div class="video-duration">18:42</div>
+                        <div class="video-progress">
+                            <div class="video-progress-bar" style="width: 35%;"></div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-action-btn" title="删除记录">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">科技行业的未来发展趋势解析</h3>
+                        <div class="card-channel">
+                            <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=wavatar&s=24" alt="频道头像">
+                            <span class="channel-name">科技前沿</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>观看于 5小时前</span>
+                            <span>已观看 35%</span>
                             </div>
                         </div>
                     </div>
@@ -287,63 +775,63 @@
                                 <span>观看于 8小时前</span>
                                 <span>已观看 100%</span>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
-            
+        </div>
+        
             <!-- 昨天的历史记录 -->
-            <div class="date-section">
-                <div class="date-header">昨天</div>
-                <div class="history-grid">
+        <div class="date-section">
+            <div class="date-header">昨天</div>
+            <div class="history-grid">
                     <div class="video-card" onclick="window.location.href='../video/video_detail.html'">
-                        <div class="card-img-container">
-                            <img class="card-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="视频封面">
-                            <div class="video-duration">23:15</div>
-                            <div class="video-progress">
-                                <div class="video-progress-bar" style="width: 100%;"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="card-action-btn" title="删除记录">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </div>
+                    <div class="card-img-container">
+                        <img class="card-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="视频封面">
+                        <div class="video-duration">23:15</div>
+                        <div class="video-progress">
+                            <div class="video-progress-bar" style="width: 100%;"></div>
                         </div>
-                        <div class="card-body">
-                            <h3 class="card-title">学习自然风光摄影的实用技巧</h3>
-                            <div class="card-channel">
-                                <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=monsterid&s=24" alt="频道头像">
-                                <span class="channel-name">摄影教程</span>
-                            </div>
-                            <div class="card-meta">
-                                <span>观看于 昨天</span>
-                                <span>已观看 100%</span>
-                            </div>
+                        <div class="card-actions">
+                            <button class="card-action-btn" title="删除记录">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
                         </div>
                     </div>
-                    
+                    <div class="card-body">
+                        <h3 class="card-title">学习自然风光摄影的实用技巧</h3>
+                        <div class="card-channel">
+                            <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=monsterid&s=24" alt="频道头像">
+                            <span class="channel-name">摄影教程</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>观看于 昨天</span>
+                            <span>已观看 100%</span>
+                        </div>
+                    </div>
+                </div>
+                
                     <div class="video-card" onclick="window.location.href='../video/video_detail.html'">
-                        <div class="card-img-container">
+                    <div class="card-img-container">
                             <img class="card-img" src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80" alt="视频封面">
                             <div class="video-duration">22:15</div>
-                            <div class="video-progress">
-                                <div class="video-progress-bar" style="width: 60%;"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="card-action-btn" title="删除记录">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </div>
+                        <div class="video-progress">
+                            <div class="video-progress-bar" style="width: 60%;"></div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-actions">
+                            <button class="card-action-btn" title="删除记录">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
                             <h3 class="card-title">游戏开发入门指南：从零开始学习编程</h3>
-                            <div class="card-channel">
+                        <div class="card-channel">
                                 <img class="channel-avatar" src="https://www.gravatar.com/avatar?d=robohash&s=24" alt="频道头像">
                                 <span class="channel-name">编程学院</span>
-                            </div>
-                            <div class="card-meta">
-                                <span>观看于 昨天</span>
-                                <span>已观看 60%</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>观看于 昨天</span>
+                            <span>已观看 60%</span>
                             </div>
                         </div>
                     </div>
@@ -377,7 +865,7 @@
             </div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // 历史记录标签页切换
@@ -402,9 +890,9 @@
                 const card = this.closest('.video-card');
                 if (confirm('确定要删除这条观看记录吗？')) {
                     card.style.animation = 'fadeOut 0.3s ease';
-                    setTimeout(() => {
+                setTimeout(() => {
                         card.remove();
-                    }, 300);
+                }, 300);
                 }
             });
         });
@@ -431,12 +919,12 @@
                             <h1 class="content-title">观看历史</h1>
                             <p class="content-subtitle">查看你最近观看的视频记录</p>
                         </div>
-                        <div class="empty-state">
-                            <i class="bi bi-clock-history"></i>
-                            <h3>暂无观看历史</h3>
+                            <div class="empty-state">
+                                <i class="bi bi-clock-history"></i>
+                                <h3>暂无观看历史</h3>
                             <p>你还没有观看过任何视频，开始探索精彩内容吧！</p>
-                        </div>
-                    `;
+                            </div>
+                        `;
                 }, 300);
             }
         });

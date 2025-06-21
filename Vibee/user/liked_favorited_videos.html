@@ -3,102 +3,627 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>收藏视频 - Vibee</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../css/common.css">
+    <title>收藏视频</title>
+    <link rel="stylesheet" href="../css/vibee-font.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
+        body {
+            margin: 0;
+            background: #f6f8fb;
+            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
+            color: #222;
+        }
+        
+        /* 统一头部样式 */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.06);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-family: 'VibeeFont', sans-serif;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #FFD93D, #FF6B6B);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 8s ease infinite, float 6s ease-in-out infinite, glow 3s ease-in-out infinite;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+            margin-right: auto;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.7rem 1.3rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 24px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            background: #f7f9fc;
+        }
+        
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        
+        .user-avatar {
+            margin-left: 1.5rem;
+            position: relative;
+            justify-self: end;
+        }
+        
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: border 0.2s;
+        }
+        
+        .avatar-img:hover {
+            border-color: #667eea;
+        }
+        
+        .user-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 52px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.13);
+            border-radius: 10px;
+            min-width: 140px;
+            z-index: 100;
+            padding: 0.5rem 0;
+        }
+        
+        .user-avatar:hover .user-menu,
+        .user-avatar:focus-within .user-menu {
+            display: block;
+        }
+        
+        .user-menu-item {
+            padding: 0.7rem 1.2rem;
+            color: #333;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        
+        .user-menu-item:hover {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        
+        /* 统一布局容器 */
+        .layout-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e1e1e1;
+            padding: 2rem 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #555;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: #f3f6fd;
+            color: #667eea;
+        }
+        
+        .sidebar-nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f6f8fb;
+        }
+        
         .content-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+        
+        .stat-icon.liked {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        
+        .stat-icon.favorited {
+            background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+        }
+        
+        .stat-info h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .stat-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* 标签页导航 */
+        .tab-nav {
+            display: flex;
+            background: #fff;
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #666;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: #fff;
+        }
+        
+        /* 过滤器栏 */
+        .filter-bar {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        .content-header h1 {
-            font-size: 2rem;
-            font-weight: 700;
+        
+        .filter-search {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
         }
-        .filter-tags {
-            display: flex;
-            gap: 0.8rem;
-        }
-        .filter-tag {
-            background: #e9ecef;
-            padding: 0.5rem 1rem;
-            border-radius: 16px;
-            font-size: 0.9rem;
-            cursor: pointer;
+        
+        .filter-search input {
+            width: 100%;
+            padding: 0.7rem 1.3rem 0.7rem 2.8rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 24px;
+            font-size: 1rem;
+            outline: none;
             transition: all 0.2s;
+            background: #f7f9fc;
         }
-        .filter-tag:hover {
-            background: #d8dde2;
+        
+        .filter-search input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
         }
-        .filter-tag.active {
-            background: #667eea;
-            color: #fff;
-            font-weight: 500;
+        
+        .filter-search i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
         }
+        
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .filter-select {
+            padding: 0.6rem 2rem 0.6rem 1rem;
+            border: 1.5px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .filter-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.1);
+        }
+        
+        /* 视频网格 */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
+        
         .video-card {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.07);
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
         }
+        
         .video-card:hover {
+            box-shadow: 0 8px 24px rgba(102,126,234,0.15);
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
         }
-        .video-card img {
+        
+        .video-thumbnail {
+            position: relative;
             width: 100%;
-            display: block;
+            height: 180px;
         }
-        .video-info {
-            padding: 1rem;
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .video-info h3 {
-            margin: 0 0 0.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
-        .video-info p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #666;
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
+        
         .video-actions {
-            padding: 0 1rem 1rem;
-            text-align: right;
+            display: flex;
+            gap: 0.5rem;
         }
-        .action-btn {
-            background: #f1f3f5;
-            color: #555;
+        
+        .video-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
-        .action-btn:hover {
-            background: #e9ecef;
-            color: #222;
+        
+        .video-action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .video-info {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #333;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .video-stats {
+            display: flex;
+            gap: 1rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .video-date {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        .video-visibility {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: auto;
+        }
+        
+        .video-card:hover .video-overlay {
+            opacity: 1;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #f7f9fc;
+            border: 1px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .page-btn:hover {
+            background: #f0f3f9;
+            border-color: #d1d8e6;
+        }
+        
+        .page-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .page-ellipsis {
+            display: flex;
+            align-items: center;
+            padding: 0 0.5rem;
+            color: #888;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid #e1e1e1;
+                padding: 1rem 0;
+            }
+            
+            .sidebar-section {
+                padding: 0 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-search {
+                max-width: 100%;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+            }
+            
+            .search-box {
+                margin: 1rem 0;
+                max-width: 100%;
+            }
+            
+            .user-avatar {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(102,126,234,0.3); }
+            50% { box-shadow: 0 0 20px rgba(102,126,234,0.6); }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">
-            Vibee
-            <span class="bee bee-1">��</span>
-            <span class="bee bee-2">🐝</span>
-            <span class="bee bee-3">🐝</span>
-        </div>
+        <div class="logo">Vi<span class="bee-body">bee</span></div>
         <div class="search-box">
-            <input type="text" placeholder="搜索收藏的视频...">
+            <input type="text" placeholder="搜索视频、用户或标签...">
         </div>
         <div class="user-avatar" tabindex="0">
             <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
@@ -106,8 +631,8 @@
                 <div class="user-menu-item" onclick="window.location.href='../visitor/login.html'">登录</div>
                 <div class="user-menu-item" onclick="window.location.href='../visitor/email_register.html'">注册</div>
             </div>
-        </div>
-    </div>
+                </div>
+                </div>
     
     <div class="layout-container">
         <div class="sidebar">
@@ -124,14 +649,14 @@
                         <a href="../video/video_keyword_search.html" class="sidebar-nav-link">
                             <i class="bi bi-search"></i>
                             关键词搜索
-                        </a>
-                    </li>
+                </a>
+            </li>
                     <li class="sidebar-nav-item">
                         <a href="../video/video_data_metrics.html" class="sidebar-nav-link">
                             <i class="bi bi-graph-up"></i>
                             数据统计
-                        </a>
-                    </li>
+                </a>
+            </li>
                 </ul>
             </div>
             
@@ -142,33 +667,33 @@
                         <a href="edit_profile.html" class="sidebar-nav-link">
                             <i class="bi bi-person"></i>
                             个人资料
-                        </a>
-                    </li>
+                </a>
+            </li>
                     <li class="sidebar-nav-item">
                         <a href="video_upload.html" class="sidebar-nav-link">
                             <i class="bi bi-cloud-upload"></i>
                             视频上传
-                        </a>
-                    </li>
+                </a>
+            </li>
                     <li class="sidebar-nav-item">
                         <a href="liked_favorited_videos.html" class="sidebar-nav-link active">
                             <i class="bi bi-heart"></i>
                             收藏视频
-                        </a>
-                    </li>
+                </a>
+            </li>
                     <li class="sidebar-nav-item">
                         <a href="watch_history.html" class="sidebar-nav-link">
                             <i class="bi bi-clock-history"></i>
                             观看历史
-                        </a>
-                    </li>
+                </a>
+            </li>
                     <li class="sidebar-nav-item">
                         <a href="friend_list.html" class="sidebar-nav-link">
                             <i class="bi bi-people"></i>
                             好友管理
-                        </a>
-                    </li>
-                </ul>
+                </a>
+            </li>
+        </ul>
             </div>
         </div>
         
@@ -176,14 +701,14 @@
             <div class="content-header">
                 <h1 class="page-title">收藏视频</h1>
                 <p class="page-subtitle">管理你喜欢的视频内容</p>
-            </div>
+        </div>
             
             <!-- 统计卡片 -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon liked">
                         <i class="bi bi-heart"></i>
-                    </div>
+    </div>
                     <div class="stat-info">
                         <h3>24</h3>
                         <p>点赞视频</p>
@@ -205,7 +730,7 @@
             <div class="tab-nav">
                 <button class="tab-btn active" data-tab="liked">点赞视频</button>
                 <button class="tab-btn" data-tab="favorited">收藏视频</button>
-            </div>
+        </div>
             
             <!-- 过滤器栏 -->
             <div class="filter-bar">
@@ -248,8 +773,8 @@
                                 <button class="video-action-btn">
                                     <i class="bi bi-bookmark-fill" style="color: #feca57;"></i>
                                 </button>
-                            </div>
-                        </div>
+            </div>
+        </div>
                     </div>
                     <div class="video-info">
                         <div class="video-title">超震撼的舞蹈表演，让你目不转睛！</div>
@@ -257,13 +782,13 @@
                             <div class="video-stats">
                                 <span><i class="bi bi-eye"></i> 12.5万</span>
                                 <span><i class="bi bi-heart"></i> 8.2万</span>
-                            </div>
+                </div>
                             <div class="video-date">2小时前</div>
-                        </div>
+                </div>
                         <div class="video-visibility">
                             <i class="bi bi-globe"></i>
                             <span>公开</span>
-                        </div>
+        </div>
                     </div>
                 </div>
                 
@@ -283,9 +808,9 @@
                                 <button class="video-action-btn">
                                     <i class="bi bi-bookmark-fill" style="color: #feca57;"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
                     <div class="video-info">
                         <div class="video-title">美食制作教程：如何做出完美的提拉米苏</div>
                         <div class="video-meta">
@@ -318,9 +843,9 @@
                                 <button class="video-action-btn">
                                     <i class="bi bi-bookmark-fill" style="color: #feca57;"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
                     <div class="video-info">
                         <div class="video-title">旅行vlog：探索神秘的古城遗址</div>
                         <div class="video-meta">
@@ -353,9 +878,9 @@
                                 <button class="video-action-btn">
                                     <i class="bi bi-bookmark-fill" style="color: #feca57;"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
                     <div class="video-info">
                         <div class="video-title">科技前沿：AI技术的最新突破与应用</div>
                         <div class="video-meta">
@@ -388,9 +913,9 @@
                                 <button class="video-action-btn">
                                     <i class="bi bi-bookmark-fill" style="color: #feca57;"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
                     <div class="video-info">
                         <div class="video-title">音乐创作：原创歌曲《夜空中最亮的星》</div>
                         <div class="video-meta">
@@ -423,9 +948,9 @@
                                 <button class="video-action-btn">
                                     <i class="bi bi-bookmark-fill" style="color: #feca57;"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
                     <div class="video-info">
                         <div class="video-title">健身教程：30分钟全身燃脂训练</div>
                         <div class="video-meta">
@@ -441,7 +966,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
             
             <!-- 分页 -->
             <div class="pagination">
