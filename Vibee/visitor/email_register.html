@@ -4,210 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注册</title>
+    <link rel="stylesheet" href="../css/visitor.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0eaff 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            filter: blur(50px);
-            z-index: 0;
-        }
-        body::before {
-            width: 300px;
-            height: 300px;
-            top: -70px;
-            left: -70px;
-            background: rgba(173, 216, 230, 0.3);
-            filter: blur(60px);
-        }
-        body::after {
-            width: 400px;
-            height: 400px;
-            bottom: -100px;
-            right: -100px;
-            background: rgba(255, 204, 255, 0.3);
-            filter: blur(70px);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(173, 216, 230, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
+        /* =================================
+           页面专属样式
+        ==================================== */
         .login-modal {
-            background-color: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            width: 90%;
-            max-width: 420px;
             min-height: 520px; /* 注册页面可能更高 */
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            animation: fadeInScale 0.5s ease-out forwards;
-        }
-
-        .modal-header {
-            padding: 25px 30px;
-            background: linear-gradient(90deg, #e3f2fd, #fce4ec);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #333;
-            position: relative;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .modal-header h2 {
-            margin: 0;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-        .close-btn {
-            font-size: 2.2rem;
-            cursor: pointer;
-            color: #8d8d8d;
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            transition: color 0.3s ease;
-        }
-        .close-btn:hover {
-            color: #212121;
-        }
-
-        .modal-content {
-            display: flex;
-            flex-grow: 1;
-            padding: 40px 35px;
-            justify-content: center;
-            align-items: flex-start;
-            overflow-y: auto;
-        }
-
-        .account-login-area {
-            width: 100%;
-            max-width: 320px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .login-sub-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #424242;
-            margin-bottom: 35px;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group {
-            margin-bottom: 2rem;
-            position: relative;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.6rem;
-            color: #616161;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 1rem 1.2rem;
-            border: 1px solid #e9e9e9;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background-color: #ffffff;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #2196F3;
-            box-shadow: 0 0 0 2px rgba(33,150,243,0.15);
-            background-color: #ffffff;
-        }
-        .form-group .error-message {
-            color: #ff1744;
-            font-size: 0.85rem;
-            margin-top: 0.6rem;
-            display: none;
-            text-align: left;
-            font-weight: bold;
-        }
-        .form-group.error input {
-            border-color: #ff1744;
-            background: #fff8f8;
-        }
-        .form-group.error .error-message {
-            display: block;
         }
         
+        /* 带按钮的输入组 (如验证码) */
         .form-group.with-button {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .form-group.with-button input {
             flex-grow: 1;
         }
 
-        .send-code-button {
-            padding: 0.9rem 1.2rem;
-            background: linear-gradient(to right, #c5e1a5 0%, #8bc34a 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 3px 8px rgba(139, 195, 74, 0.3);
-        }
-        .send-code-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 12px rgba(139, 195, 74, 0.4);
-        }
-        .send-code-button:active {
-            transform: translateY(0);
-        }
-        .send-code-button:disabled {
-            background: #e0e0e0;
-            color: #bdbdbd;
-            cursor: not-allowed;
-        }
-
+        /* 密码强度指示器 */
         .password-strength {
             height: 6px;
             margin-top: 0.8rem;
@@ -235,6 +51,7 @@
             width: 100%;
         }
 
+        /* 协议文本 */
         .agreement-text {
             text-align: center;
             margin-top: 2rem;
@@ -252,85 +69,39 @@
             text-decoration: underline;
             color: #7ecaf7;
         }
-
-        .primary-login-button {
-            width: 100%;
-            padding: 1.1rem;
-            background: linear-gradient(to right, #81d4fa 0%, #42a5f5 100%);
+        
+        /* 发送验证码按钮 */
+        .send-code-button {
+            padding: 0.9rem 1.2rem;
+            background: linear-gradient(to right, #c5e1a5 0%, #8bc34a 100%);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: 700;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 12px rgba(66, 165, 245, 0.25);
-            margin-top: 25px; /* Adjust margin for single button */
+            white-space: nowrap;
+            box-shadow: 0 3px 8px rgba(139, 195, 74, 0.3);
         }
-        .primary-login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(66, 165, 245, 0.35);
+        .send-code-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(139, 195, 74, 0.4);
         }
-        .primary-login-button:active {
+        .send-code-button:active {
             transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(66, 165, 245, 0.15);
         }
-        .primary-login-button.loading {
-            position: relative;
-            pointer-events: none;
-            background: linear-gradient(to right, #a7d9f7 0%, #81d4fa 100%);
+        .send-code-button:disabled {
+            background: #e0e0e0;
+            color: #bdbdbd;
+            cursor: not-allowed;
         }
-        .primary-login-button.loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin: -10px 0 0 -10px;
-            border: 2px solid #ffffff;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: loading 0.8s linear infinite;
+        
+        .primary-login-button {
+             margin-top: 1rem;
         }
-        @keyframes loading {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .toast {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 0.9rem 1.8rem;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border-radius: 8px;
-            transform: translateX(120%);
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-            z-index: 2000;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            opacity: 0;
-        }
-        .toast.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
+        
+        /* 响应式调整 */
         @media (max-width: 480px) {
             .login-modal {
                 width: 95%;
@@ -339,20 +110,12 @@
             .modal-content {
                 padding: 30px 25px;
             }
-            .login-sub-title {
-                font-size: 1.5rem;
-                margin-bottom: 25px;
-            }
             .form-group input {
                 padding: 0.9rem 1rem;
             }
             .primary-login-button {
                 padding: 1rem;
                 font-size: 1.1rem;
-            }
-            .send-code-button {
-                padding: 0.8rem 1rem;
-                font-size: 0.85rem;
             }
         }
     </style>
