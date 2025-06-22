@@ -40,7 +40,7 @@
             box-shadow: 0 2px 12px rgba(102,126,234,0.07);
             margin-bottom: 2rem;
         }
-
+        
         .upload-drop-zone {
             border: 2px dashed #d1d8e6;
             border-radius: 16px;
@@ -87,7 +87,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102,126,234,0.2);
         }
-
+        
         .file-input {
             position: absolute;
             top: 0;
@@ -120,7 +120,7 @@
                 max-width: none;
             }
         }
-
+        
         @media (max-width: 768px) {
             .upload-container {
                 padding: 2rem;
@@ -149,11 +149,8 @@
             <span class="bee bee-2">🐝</span>
             <span class="bee bee-3">🐝</span>
         </div>
-        <div class="search-box">
-            <input type="text" placeholder="搜索视频、频道或用户...">
-        </div>
         <div class="user-avatar" tabindex="0">
-            <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
+            <img class="avatar-img" src="../images/default-avatar.svg" alt="用户头像">
             <div class="user-menu">
                 <div class="user-menu-item" onclick="window.location.href='../visitor/login.html'">登录</div>
                 <div class="user-menu-item" onclick="window.location.href='../visitor/email_register.html'">注册</div>
@@ -180,7 +177,7 @@
                     </li>
                     <li class="sidebar-nav-item">
                         <a href="../video/video_data_metrics.html" class="sidebar-nav-link">
-                            <i class="bi bi-graph-up"></i>
+                    <i class="bi bi-graph-up"></i>
                             数据统计
                         </a>
                     </li>
@@ -222,24 +219,24 @@
                     </li>
                 </ul>
         </div>
-    </div>
-    
+        </div>
+        
     <div class="main-content">
             <div class="content-header">
                 <h1 class="page-title">视频上传</h1>
                 <p class="page-subtitle">分享你的精彩时刻</p>
             </div>
-
+            
             <!-- 上传容器 -->
             <div class="upload-container">
                 <!-- 拖拽上传区域 -->
                 <div class="upload-drop-zone" id="upload-drop-zone">
-                    <i class="bi bi-cloud-upload upload-icon"></i>
-                    <div class="upload-text">拖放视频文件到这里，或点击选择文件</div>
-                    <button class="upload-button" type="button">选择视频文件</button>
-                    <input type="file" class="file-input" id="video-file" accept="video/*">
-                    <div class="form-text">支持的格式: MP4, MOV, AVI, MKV (最大2GB)</div>
-                </div>
+                <i class="bi bi-cloud-upload upload-icon"></i>
+                <div class="upload-text">拖放视频文件到这里，或点击选择文件</div>
+                <button class="upload-button" type="button">选择视频文件</button>
+                <input type="file" class="file-input" id="video-file" accept="video/*">
+                <div class="form-text">支持的格式: MP4, MOV, AVI, MKV (最大2GB)</div>
+            </div>
             </div>
         </div>
     </div>

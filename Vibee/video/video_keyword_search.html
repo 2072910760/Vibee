@@ -109,6 +109,31 @@
             border-color: #667eea;
         }
         
+        /* 热门搜索 */
+        .hot-searches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        
+        .hot-search-tag {
+            padding: 0.5rem 1rem;
+            background: #f3f6fd;
+            border: 1px solid #e1e1e1;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #667eea;
+        }
+        
+        .hot-search-tag:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
         /* 5.3 搜索结果 */
         .results-section {
             background: #fff;
@@ -221,11 +246,8 @@
             <span class="bee bee-2">🐝</span>
             <span class="bee bee-3">🐝</span>
         </div>
-        <div class="search-box">
-            <input type="text" placeholder="搜索视频、频道或用户...">
-        </div>
         <div class="user-avatar" tabindex="0">
-            <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
+            <img class="avatar-img" src="../images/default-avatar.svg" alt="用户头像">
             <div class="user-menu">
                 <div class="user-menu-item" onclick="window.location.href='../visitor/login.html'">登录</div>
                 <div class="user-menu-item" onclick="window.location.href='../visitor/email_register.html'">注册</div>

@@ -103,11 +103,8 @@
             <span class="bee bee-2">🐝</span>
             <span class="bee bee-3">🐝</span>
         </div>
-        <div class="search-box">
-            <input type="text" placeholder="搜索视频、用户或标签...">
-        </div>
         <div class="user-avatar" tabindex="0">
-            <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
+            <img class="avatar-img" src="../images/default-avatar.svg" alt="用户头像">
             <div class="user-menu">
                 <div class="user-menu-item" onclick="window.location.href='../visitor/login.html'">登录</div>
                 <div class="user-menu-item" onclick="window.location.href='../visitor/email_register.html'">注册</div>
@@ -215,10 +212,6 @@
             
             <!-- 过滤器栏 -->
             <div class="filter-bar">
-                <div class="filter-search">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="搜索收藏的视频...">
-                </div>
                 <div class="filter-actions">
                     <select class="filter-select" id="sort-filter">
                         <option value="date">按时间排序</option>
@@ -479,13 +472,6 @@
                 console.log('过滤器变化:', this.id, this.value);
                 // 这里可以添加实际的过滤逻辑
             });
-        });
-        
-        // 搜索功能
-        document.querySelector('.filter-search input').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            console.log('搜索:', searchTerm);
-            // 这里可以添加实际的搜索逻辑
         });
         
         // 视频卡片交互

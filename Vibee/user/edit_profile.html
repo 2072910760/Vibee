@@ -252,11 +252,13 @@
             <span class="bee bee-2">🐝</span>
             <span class="bee bee-3">🐝</span>
         </div>
-        <div class="search-box">
-            <input type="text" placeholder="搜索视频、用户或标签...">
+        <div class="header-bg">
+            <span class="bee bee-1">🐝</span>
+            <span class="bee bee-2">🐝</span>
+            <span class="bee bee-3">🐝</span>
         </div>
         <div class="user-avatar" tabindex="0">
-            <img class="avatar-img" src="https://www.gravatar.com/avatar?d=mp&s=80" alt="用户头像">
+            <img class="avatar-img" src="../images/default-avatar.svg" alt="用户头像">
             <div class="user-menu">
                 <div class="user-menu-item" onclick="window.location.href='../visitor/login.html'">登录</div>
                 <div class="user-menu-item" onclick="window.location.href='../visitor/email_register.html'">注册</div>
@@ -338,7 +340,7 @@
                 <form id="profile-form">
                     <!-- 头像上传区域 -->
                     <div class="avatar-section">
-                        <img src="https://www.gravatar.com/avatar?d=mp&s=120" alt="用户头像" class="avatar-preview" id="avatar-preview">
+                        <img src="../images/default-avatar.svg" alt="用户头像" class="avatar-preview" id="avatar-preview">
                         <div>
                             <button type="button" class="avatar-upload-btn" onclick="document.getElementById('avatar-input').click()">
                                 <i class="bi bi-camera"></i>
@@ -478,7 +480,7 @@
         function resetForm() {
             if (confirm('确定要重置所有更改吗？')) {
                 document.getElementById('profile-form').reset();
-                document.getElementById('avatar-preview').src = 'https://www.gravatar.com/avatar?d=mp&s=120';
+                document.getElementById('avatar-preview').src = '../images/default-avatar.svg';
             }
         }
         

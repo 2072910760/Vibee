@@ -89,6 +89,25 @@
             height: 28px;
         }
 
+        /* 协议文本 */
+        .agreement-text {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            line-height: 1.5;
+        }
+        .agreement-text a {
+            color: #a7d9f7;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .agreement-text a:hover {
+            text-decoration: underline;
+            color: #7ecaf7;
+        }
+
     </style>
 </head>
 <body>
@@ -125,10 +144,10 @@
                         <button type="submit" class="primary-login-button">登录</button>
                     </form>
                     <div class="agreement-text">
-                        登录即表示同意<a href="#">《用户协议》</a>和<a href="#">《隐私政策》</a>
+                        登录即表示同意<a href="#" class="forgot-password">《用户协议》</a>和<a href="#" class="forgot-password">《隐私政策》</a>
                     </div>
-                    <div class="link-text">
-                        还没有账号？<a href="email_register.html">立即注册</a>
+                    <div class="agreement-text">
+                        还没有账号？<a href="email_register.html" class="forgot-password">立即注册</a>
                     </div>
                 </div>
             </div>
@@ -247,7 +266,7 @@
 
             // 关闭按钮
             document.querySelector('.close-btn').addEventListener('click', function() {
-                window.location.href = '/';
+                window.location.href = '../video/video_initial.html';
             });
 
             // 表单提交处理
